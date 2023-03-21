@@ -12,13 +12,18 @@ OBJECTS = $(SOURCES:.stan=.o) RcppExports.o psrwe_cpp_tools.o
 all: $(SHLIB)
 
 clean:
-		RM -rf stan_files/*.o
-		RM -rf *.so *.o
-		RM -rf stan_files/*.cc
-		RM -rf stan_files/*.hpp
+	@$(RM) -rf stan_files/*.o
+	@$(RM) -rf *.so *.o
+	@$(RM) -rf stan_files/*.cc
+	@$(RM) -rf stan_files/*.hpp
 
-%.cc: %.stan
-				"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" $<
+# %.cc: %.stan
+	# "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" $<
 
+stan_files/powerp.cc: build_stan
+stan_files/powerps.cc: build_stan
+stan_files/powerpsbinary.cc: build_stan
+build_stan:
+	"$(R_HOME)/bin$(R_ARCH_BIN)/R" --vanilla --quiet < ../tools/make_stan.r
 
 .phony: clean
