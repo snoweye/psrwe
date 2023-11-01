@@ -720,6 +720,54 @@ get_ps_cl_km <- function(dta_psbor,
     return(rst)
 }
 
+
+#' Get estimates for composite likelihood and survival skip stderr
+#'
+#'
+#'
+#' @noRd
+#'
+get_ps_cl_km_none <- function(dta_psbor,
+                              v_outcome     = NULL,
+                              v_event       = NULL,
+                              v_time        = NULL,
+                              f_stratum     = get_cl_stratum,
+                              f_overall_est = get_overall_est,
+                              ...) {
+    get_ps_cl_km(dta_psbor,
+                 v_outcome     = v_outcome,
+                 v_event       = v_event,
+                 v_timet       = v_time,
+                 v_stratum     = v_stragum,
+                 f_overall_est = f_overall_est,
+                 stderr_method = "none",
+                 ...)
+}
+
+#' Get estimates for composite likelihood and survival naive 
+#'
+#'
+#'
+#' @noRd
+#'
+get_ps_cl_km_naive <- function(dta_psbor,
+                               v_outcome     = NULL,
+                               v_event       = NULL,
+                               v_time        = NULL,
+                               f_stratum     = get_cl_stratum,
+                               f_overall_est = get_overall_est,
+                               ...) {
+    get_ps_cl_km(dta_psbor,
+                 v_outcome     = v_outcome,
+                 v_event       = v_event,
+                 v_timet       = v_time,
+                 v_stratum     = v_stragum,
+                 f_overall_est = f_overall_est,
+                 stderr_method = "naive",
+                 ...)
+}
+
+
 #' Summarize overall theta
 #'
 #'

@@ -74,6 +74,7 @@ psrwe_compl_watt <- function(dta_psbor, v_outcome = "Y",
     rst <- f_get_ps_cl_km_watt(dta_psbor, v_outcome = v_outcome,
                                outcome_type = outcome_type,
                                f_stratum = get_cl_stratum_watt,
+                               n_bootstrap = n_bootstrap,
                                ...)
 
     ## return
@@ -261,6 +262,7 @@ get_ps_cl_km_watt <- function(dta_psbor,
                               v_time        = NULL,
                               f_stratum     = get_cl_stratum_watt,
                               f_overall_est = get_overall_est,
+                              n_bootstrap   = 200,
                               ...) {
 
     ## prepare data
