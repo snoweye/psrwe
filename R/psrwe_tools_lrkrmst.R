@@ -50,6 +50,52 @@ get_ps_lrk_rmst <- function(dta_psbor,
 }
 
 
+#' Get estimates for log-rank and RMST tests between two arms
+#' for RCT augmenting control skip stderr
+#'
+#' @noRd
+#'
+get_ps_lrk_rmst_none <- function(dta_psbor,
+                                 v_outcome     = NULL,
+                                 v_event       = NULL,
+                                 v_time        = NULL,
+                                 f_stratum     = get_surv_stratum_lrk,
+                                 f_overall_est = get_overall_est,
+                                 ...) {
+    get_ps_lrk_rmst(dta_psbor,
+                    v_outcome     = v_outcome,
+                    v_event       = v_event,
+                    v_time        = v_time,
+                    f_stratum     = f_stratum,
+                    f_overall_est = f_overall_est,
+                    stderr_method = "none",
+                    ...)
+}
+
+
+#' Get estimates for log-rank and RMST tests between two arms
+#' for RCT augmenting control with naive var
+#'
+#' @noRd
+#'
+get_ps_lrk_rmst_naive <- function(dta_psbor,
+                                  v_outcome     = NULL,
+                                  v_event       = NULL,
+                                  v_time        = NULL,
+                                  f_stratum     = get_surv_stratum_lrk,
+                                  f_overall_est = get_overall_est,
+                                  ...) {
+    get_ps_lrk_rmst(dta_psbor,
+                    v_outcome     = v_outcome,
+                    v_event       = v_event,
+                    v_time        = v_time,
+                    f_stratum     = f_stratum,
+                    f_overall_est = f_overall_est,
+                    stderr_method = "naive",
+                    ...)
+}
+
+
 ## Simple Jackknife
 
 #' Get simple JKoverall estimates for log-rank and RMST estimations between two arms
