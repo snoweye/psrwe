@@ -80,8 +80,9 @@ psrwe_survcoxph <- function(dta_psbor,
     ## all time points
     data    <- dta_psbor$data
 
-    ## observed
-    rst_obs <- get_coxph_observed(data, v_time, v_event)
+    ## observed (TBD)
+    # rst_obs <- get_coxph_observed(data, v_time, v_event)
+    rst_obs <- NULL
 
     ## call estimation
     f_get_ps_coxph <- switch(stderr_method[1],
@@ -204,54 +205,29 @@ rwe_coxph <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
                          rep(n_borrow / ns0, ns0))
     }
 
-    ## KM with stratum weights
-    colnames(cur_data) <- c("time", "event")
-    cur_data <- data.frame(cur_data)
-    cur_surv <- survfit(Surv(time, event) ~ 1,
-                        data      = cur_data,
-                        weights   = cur_weights,
-                        conf.type = "none")
-
     ## trt arm
     cur_data_trt    <- dta_cur_trt
     ns1_trt         <- nrow(dta_cur_trt)
     cur_weights_trt <- rep(1, ns1_trt)
 
-    ## KM with stratum weights for trt arm
-    colnames(cur_data_trt) <- c("time", "event")
-    cur_data_trt <- data.frame(cur_data_trt)
-    cur_surv_trt <- survfit(Surv(time, event) ~ 1,
-                            data      = cur_data_trt,
-                            weights   = cur_weights_trt,
-                            conf.type = "none")
+    ## Combine data of two arms together
+    cur_data <- cbind(cur_data, 0)
+    cur_data_trt <- cbind(cur_data_trt, 1)
+    cur_data_comb <- rbind(cur_data_trt, cur_data)
+    cur_data_comb <- data.frame(cur_data_comb)
+    colnames(cur_data_comb) <- c("time", "event", "Arm")
+
+    cur_weights_comb <- c(cur_weights_trt, cur_weights)
+
+    ## TBD
 
     ## summary.coxph() does not do prediction, see predict.coxph().
-    pred_tps <- max(c(cur_surv$time, cur_surv_trt$time))
+    pred_tps <- max(cur_data_comb$time)
 
-    rst <- summary(cur_surv)
-    rst_trt <- summary(cur_surv_trt)
-
-    ## info needed for coxph
-    n_risk_trt <- rst_trt$n.risk
-    n_risk_ctl <- rst$n.risk
-    n_event_trt <- rst_trt$n.event
-    n_event_ctl <- rst$n.event
-
-    n_risk <- n_risk_trt + n_risk_ctl
-    n_event <- n_event_trt + n_event_ctl
-    p_event <- ifelse(n_risk == 0, 0, n_event / n_risk)
-    E_1_j <- n_risk_trt * p_event
-
-    ## coxph main statistic
-    mean_d <- n_event_trt - E_1_j
-    mean_d <- cumsum(mean_d)
 
     ## for coxph naive stderr
     if (stderr_method == "naive") {
-        stderr_d <- ifelse(n_risk <= 1, 0,
-                           E_1_j * (1 - p_event) *
-                           n_risk_ctl / (n_risk - 1))
-        stderr_d <- sqrt(cumsum(stderr_d))
+
     } else {
         ## for none, jk, sjk, cjk, sbs, or cbs
         stderr_d <- rep(NA, length(mean_d))
