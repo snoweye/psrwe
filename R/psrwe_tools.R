@@ -761,7 +761,7 @@ get_ps_cl_km_naive <- function(dta_psbor,
                  v_outcome     = v_outcome,
                  v_event       = v_event,
                  v_timet       = v_time,
-                 f_stratum     = f_stragum,
+                 f_stratum     = f_stratum,
                  f_overall_est = f_overall_est,
                  stderr_method = "naive",
                  ...)
