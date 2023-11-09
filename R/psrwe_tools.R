@@ -664,6 +664,7 @@ get_ps_cl_km <- function(dta_psbor,
                          v_time        = NULL,
                          f_stratum     = get_cl_stratum,
                          f_overall_est = get_overall_est,
+                         n_bootstrap   = 200,
                          ...) {
 
     ## prepare data
@@ -733,6 +734,7 @@ get_ps_cl_km_none <- function(dta_psbor,
                               v_time        = NULL,
                               f_stratum     = get_cl_stratum,
                               f_overall_est = get_overall_est,
+                              n_bootstrap = 200,
                               ...) {
     get_ps_cl_km(dta_psbor,
                  v_outcome     = v_outcome,
@@ -741,6 +743,7 @@ get_ps_cl_km_none <- function(dta_psbor,
                  f_stratum     = f_stratum,
                  f_overall_est = f_overall_est,
                  stderr_method = "none",
+                 n_bootstrap   = n_bootstrap,
                  ...)
 }
 
@@ -756,6 +759,7 @@ get_ps_cl_km_naive <- function(dta_psbor,
                                v_time        = NULL,
                                f_stratum     = get_cl_stratum,
                                f_overall_est = get_overall_est,
+                               n_bootstrap = 200,
                                ...) {
     get_ps_cl_km(dta_psbor,
                  v_outcome     = v_outcome,
@@ -764,6 +768,7 @@ get_ps_cl_km_naive <- function(dta_psbor,
                  f_stratum     = f_stratum,
                  f_overall_est = f_overall_est,
                  stderr_method = "naive",
+                 n_bootstrap   = n_bootstrap,
                  ...)
 }
 
