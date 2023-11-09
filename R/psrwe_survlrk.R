@@ -1,4 +1,4 @@
-#' PS-Integrated Log-Rank Test For Comparing Time-to-event Outcomes
+#' PS-integrated log-rank test for comparing time-to-event outcomes
 #'
 #' Log-rank test evaluates two-arm RCT for up to a given time point.
 #' Variance can be estimated by Jackknife methods.
@@ -79,8 +79,9 @@ psrwe_survlrk <- function(dta_psbor, pred_tp,
     obs_tps <- data[which(1 == data[[v_event]]), v_time]
     all_tps <- sort(unique(c(pred_tp, obs_tps)))
 
-    ## observed
-    rst_obs <- get_km_observed(data, v_time, v_event, all_tps)
+    ## observed (no need so skip)
+    # rst_obs <- get_km_observed(data, v_time, v_event, all_tps)
+    rst_obs <- NA
 
     ## call estimation
     if (stderr_method %in% c("naive", "jk", "none")) {
@@ -125,12 +126,12 @@ psrwe_survlrk <- function(dta_psbor, pred_tp,
     }
 
     ## return
-    rst$Observed <- rst_obs
-    rst$pred_tp  <- pred_tp
+    rst$Observed      <- rst_obs
+    rst$pred_tp       <- pred_tp
     rst$stderr_method <- stderr_method
-    rst$Method   <- "ps_lrk"
-    rst$Outcome_type <- "tte"
-    class(rst)   <- get_rwe_class("ANARST")
+    rst$Method        <- "ps_lrk"
+    rst$Outcome_type  <- "tte"
+    class(rst)        <- get_rwe_class("ANARST")
     return(rst)
 }
 

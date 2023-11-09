@@ -21,7 +21,9 @@ get_rwe_class <- function(c_str) {
          n_current = "the number of current control subjects",
          distance  = "the distance in PS distributions",
          inverse_distance = "one minus the inverse of the distance in PS distributions",
-         ANAMETHOD = c("ps_pp", "ps_cl", "ps_km", "ps_lrk", "ps_rmst"),
+         ANAMETHOD = c("ps_pp", "ps_cl",
+                       "ps_km", "ps_lrk", "ps_rmst",
+                       "ps_coxphwa", "ps_coxphst"),
          ANAMETHOD_KM = c("ps_km", "ps_lrk", "ps_rmst")
          )
 }

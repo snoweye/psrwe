@@ -105,15 +105,17 @@ psrwe_outana <- function(dta_psrst,
                                         "Method_pval")]
     ## summary observed
     rst_obs <- dta_psrst$Observed
-    rst_obs$Group <- factor(rst_obs$Group,
-                            levels = c(0, 1),
-                            labels = c("RWD", "Cur"))
-    if (is_rct) {
-        rst_obs$Arm <- factor(rst_obs$Arm,
-                              levels = c(0, 1),
-                              labels = c("ctl", "trt"))
-    } else {
-        rst_obs$Arm <- NULL
+    if (!is.na(dta_psrst$Observed)) {
+        rst_obs$Group <- factor(rst_obs$Group,
+                                levels = c(0, 1),
+                                labels = c("RWD", "Cur"))
+        if (is_rct) {
+            rst_obs$Arm <- factor(rst_obs$Arm,
+                                  levels = c(0, 1),
+                                  labels = c("ctl", "trt"))
+        } else {
+            rst_obs$Arm <- NULL
+        }
     }
 
     ## summary estimation
@@ -433,11 +435,6 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
         dta_psrst$pred_tp <- unique_pred_tps
     }
 
-    ## index Observed and Control
-    id_Observed_T <- dta_psrst$Observed$T %in% org_pred_tps
-    id_Stratum_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
-    id_Overall_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
-
     ## Subset df by id_T and replace T with new time points in t_tbl
     subset_replace <- function(df, id_T, t_tbl) {
         df <- df[id_T,]
@@ -452,11 +449,16 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     }
 
     ## subset Observed
-    dta_psrst$Observed <- subset_replace(dta_psrst$Observed,
-                                         id_Observed_T,
-                                         time_table)
+    if (!is.na(dta_psrst$Observed)) {
+        id_Observed_T <- dta_psrst$Observed$T %in% org_pred_tps
+        dta_psrst$Observed <- subset_replace(dta_psrst$Observed,
+                                             id_Observed_T,
+                                             time_table)
+    }
 
     ## subset estimates
+    id_Stratum_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
+    id_Overall_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
     for (i_type in types_est) {
         if (!is.null(dta_psrst[[i_type]])) {
             dta_psrst[[i_type]]$Stratum_Estimate <-
@@ -502,12 +504,15 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     }
 
     ## subset OUTANA
+### I am here
     if (exists("OUTANA", dta_psrst)) {
-        id_T <- dta_psrst$OUTANA$Observed_Summary$T %in% org_pred_tps
-        dta_psrst$OUTANA$Observed_Summary <-
-            subset_replace(dta_psrst$OUTANA$Observed_Summary,
-                           id_T,
-                           time_table)
+        if (!is.na(dta_psrst$OUTANA$Observed_Summary)) {
+            id_T <- dta_psrst$OUTANA$Observed_Summary$T %in% org_pred_tps
+            dta_psrst$OUTANA$Observed_Summary <-
+                subset_replace(dta_psrst$OUTANA$Observed_Summary,
+                               id_T,
+                               time_table)
+        }
 
         id_T <- dta_psrst$OUTANA$Analysis_Summary$T %in% org_pred_tps
         dta_psrst$OUTANA$Analysis_Summary <-

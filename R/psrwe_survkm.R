@@ -1,4 +1,4 @@
-#' PS-Integrated Kaplan-Meier Estimation
+#' PS-integrated Kaplan-Meier estimation
 #'
 #' Estimate the mean of a survival outcome at a given time point based on
 #' PS-integrated Kaplan-Meier approach. Variance can be estimated by Jackknife
@@ -120,12 +120,12 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
     }
 
     ## return
-    rst$Observed <- rst_obs
-    rst$pred_tp  <- pred_tp
+    rst$Observed      <- rst_obs
+    rst$pred_tp       <- pred_tp
     rst$stderr_method <- stderr_method
-    rst$Method   <- "ps_km"
-    rst$Outcome_type <- "tte"
-    class(rst)   <- get_rwe_class("ANARST")
+    rst$Method        <- "ps_km"
+    rst$Outcome_type  <- "tte"
+    class(rst)        <- get_rwe_class("ANARST")
     return(rst)
 }
 
