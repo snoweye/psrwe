@@ -125,8 +125,10 @@ psrwe_outana <- function(dta_psrst,
                          rep(0, nrow(dta_psrst[[type]]$Overall_Estimate))),
                        levels = c(1:nrow(dta_psrst$Borrow), 0),
                        labels = c(dta_psrst$Borrow$Stratum, "Overall"))
+    } else if (dta_psrst$Method %in% c("ps_coxphst")) {
+        stop("TBD")
     } else {
-        ## i.e., ps_pp and ps_cl
+        ## i.e., ps_pp and ps_cl, and ps_coxphwa
         id_s <- factor(c(1:nrow(dta_psrst$Borrow), 0),
                        levels = c(1:nrow(dta_psrst$Borrow), 0),
                        labels = c(dta_psrst$Borrow$Stratum, "Overall"))
@@ -295,6 +297,9 @@ print.PSRWE_RST_OUTANA <- function(x,
                 poi <- "sum[d_trt-E(d_trt)]"
             } else if(x_outana$Analysis_Setup$Method == "ps_rmst") {
                 poi <- "auc(S_trt)-auc(S_ctl)"
+            } else if (x_outana$Analysis_Setup$Method %in%
+                       c("ps_coxphwa", "ps_coxphst")) {
+                poi <- "log(hr trt/ctl)"
             } else {
               stop("The method is not implemented.")
             }
