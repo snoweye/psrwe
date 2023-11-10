@@ -11,7 +11,6 @@
 #' @param v_time Column name corresponding to event time
 #' @param v_event Column name corresponding to event status
 #' @param stderr_method Method for computing StdErr, see Details
-#' @param n_bootstrap Number of bootstrap samples (for bootstrap stderr)
 #' @param ... Additional Parameters
 #'
 #' @details \code{stderr_method} includes \code{naive} as default which
@@ -25,7 +24,7 @@
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
 #'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-#'     methods.
+#'     methods (\code{n_bootstrap = 200} as default).
 #'
 #' @return A data frame with class name \code{PSRWE_RST}. It contains the
 #'     composite estimation of the mean for each stratum as well as the
@@ -55,7 +54,6 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
                          v_event    = "event",
                          stderr_method = c("naive", "jk", "sjk", "cjk",
                                            "sbs", "cbs", "none"), 
-                         n_bootstrap = 200,
                          ...) {
 
     ## check
@@ -90,30 +88,24 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
                                 v_event = v_event, v_time = v_time,
                                 f_stratum = get_surv_stratum,
                                 pred_tp = all_tps,
-                                stderr_method = "none",
                                 ...)
     } else if (stderr_method[1] %in% c("cjk")) {
         rst <- get_ps_cl_km_cjk(dta_psbor,
                                 v_event = v_event, v_time = v_time,
                                 f_stratum = get_surv_stratum,
                                 pred_tp = all_tps,
-                                stderr_method = "none",
                                 ...)
     } else if (stderr_method[1] %in% c("sbs")) {
         rst <- get_ps_cl_km_sbs(dta_psbor,
                                 v_event = v_event, v_time = v_time,
                                 f_stratum = get_surv_stratum,
                                 pred_tp = all_tps,
-                                stderr_method = "none",
-                                n_bootstrap = n_bootstrap,
                                 ...)
     } else if (stderr_method[1] %in% c("cbs")) {
         rst <- get_ps_cl_km_cbs(dta_psbor,
                                 v_event = v_event, v_time = v_time,
                                 f_stratum = get_surv_stratum,
                                 pred_tp = all_tps,
-                                stderr_method = "none",
-                                n_bootstrap = n_bootstrap,
                                 ...)
     } else {
         stop("stderr_errmethod is not implemented.")

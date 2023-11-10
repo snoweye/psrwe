@@ -105,7 +105,7 @@ psrwe_outana <- function(dta_psrst,
                                         "Method_pval")]
     ## summary observed
     rst_obs <- dta_psrst$Observed
-    if (!is.na(dta_psrst$Observed)) {
+    if (!is.null(dta_psrst$Observed)) {
         rst_obs$Group <- factor(rst_obs$Group,
                                 levels = c(0, 1),
                                 labels = c("RWD", "Cur"))
@@ -419,7 +419,11 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     ## find closest time point (infimum)
     org_pred_tps <- dta_psrst$pred_tp
     if (!is.null(pred_tps)) {
-        unique_tps <- sort(unique(dta_psrst$Observed$T))
+        if (is_rct) {
+            unique_tps <- sort(unique(dta_psrst$Effect$T))
+        } else {
+            unique_tps <- sort(unique(dta_psrst$Control$T))
+        }
         unique_pred_tps <- sort(unique(pred_tps))
 
         stopifnot(min(unique_pred_tps) >= min(unique_tps))
@@ -449,7 +453,7 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     }
 
     ## subset Observed
-    if (!is.na(dta_psrst$Observed)) {
+    if (!is.null(dta_psrst$Observed)) {
         id_Observed_T <- dta_psrst$Observed$T %in% org_pred_tps
         dta_psrst$Observed <- subset_replace(dta_psrst$Observed,
                                              id_Observed_T,
@@ -504,9 +508,8 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     }
 
     ## subset OUTANA
-### I am here
     if (exists("OUTANA", dta_psrst)) {
-        if (!is.na(dta_psrst$OUTANA$Observed_Summary)) {
+        if (!is.null(dta_psrst$OUTANA$Observed_Summary)) {
             id_T <- dta_psrst$OUTANA$Observed_Summary$T %in% org_pred_tps
             dta_psrst$OUTANA$Observed_Summary <-
                 subset_replace(dta_psrst$OUTANA$Observed_Summary,

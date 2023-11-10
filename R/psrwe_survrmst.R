@@ -13,7 +13,6 @@
 #' @param v_time Column name corresponding to event time
 #' @param v_event Column name corresponding to event status
 #' @param stderr_method Method for computing StdErr, see Details
-#' @param n_bootstrap Number of bootstrap samples (for bootstrap stderr)
 #' @param ... Additional Parameters
 #'
 #' @details \code{stderr_method} includes \code{naive} as default which
@@ -27,7 +26,7 @@
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
 #'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-#'     methods.
+#'     methods (\code{n_bootstrap = 200} as default).
 #'
 #' @return A data frame with class name \code{PSRWE_RST_TESTANA}.
 #'     It contains the test statistics of each stratum as well as the
@@ -59,7 +58,6 @@ psrwe_survrmst <- function(dta_psbor, pred_tp,
                            v_event       = "event",
                            stderr_method = c("naive", "jk", "sjk", "cjk",
                                              "sbs", "cbs", "none"), 
-                           n_bootstrap = 200,
                            ...) {
 
     ## check
@@ -82,7 +80,7 @@ psrwe_survrmst <- function(dta_psbor, pred_tp,
 
     ## observed (no need so skip)
     # rst_obs <- get_km_observed(data, v_time, v_event, all_tps)
-    rst_obs <- NA
+    rst_obs <- NULL
 
     ## call estimation
     if (stderr_method %in% c("naive", "jk", "none")) {
@@ -112,7 +110,6 @@ psrwe_survrmst <- function(dta_psbor, pred_tp,
                                    f_stratum = get_surv_stratum_rmst,
                                    pred_tps = all_tps,
                                    stderr_method = "none",
-                                   n_bootstrap = n_bootstrap,
                                    ...)
     } else if (stderr_method %in% c("cbs")) {
         rst <- get_ps_lrk_rmst_cbs(dta_psbor,
@@ -120,19 +117,18 @@ psrwe_survrmst <- function(dta_psbor, pred_tp,
                                    f_stratum = get_surv_stratum_rmst,
                                    pred_tp = all_tps,
                                    stderr_method = "none",
-                                   n_bootstrap = n_bootstrap,
                                    ...)
     } else {
         stop("stderr_errmethod is not implemented.")
     }
 
     ## return
-    rst$Observed      <- rst_obs
-    rst$pred_tp       <- pred_tp
+    rst$Observed <- rst_obs
+    rst$pred_tp  <- pred_tp
     rst$stderr_method <- stderr_method
-    rst$Method        <- "ps_rmst"
-    rst$Outcome_type  <- "tte"
-    class(rst)        <- get_rwe_class("ANARST")
+    rst$Method   <- "ps_rmst"
+    rst$Outcome_type <- "tte"
+    class(rst)   <- get_rwe_class("ANARST")
     return(rst)
 }
 

@@ -12,7 +12,6 @@
 #' @param v_time Column name corresponding to event time
 #' @param v_event Column name corresponding to event status
 #' @param stderr_method Method for computing StdErr (see Details)
-#' @param n_bootstrap Number of bootstrap samples (for bootstrap stderr)
 #' @param ... Additional Parameters
 #'
 #' @details \code{stderr_method} includes \code{naive} as default which
@@ -70,20 +69,24 @@ psrwe_survcoxphwa <- function(dta_psbor,
 
     ## observed (no need so skip)
     # rst_obs <- get_coxph_observed(data, v_time, v_event)
-    rst_obs <- NA
+    rst_obs <- NULL
 
     ## call estimation
-    rst <- get_ps_coxphwa(dta_psbor,
-                          v_event = v_event, v_time = v_time,
-                          n_bootstrap = n_bootstrap,
-                          ...)
+    if (stderr_method[1] %in% c("naive", "jk")) {
+        rst <- get_ps_coxphwa(dta_psbor,
+                              v_event = v_event, v_time = v_time,
+                              stderr_method = stderr_method[1],
+                              ...)
+    } else {
+        stop("stderr_errmethod is not implemented.")
+    }
 
     ## return
-    rst$Observed      <- rst_obs
+    rst$Observed <- rst_obs
     rst$stderr_method <- stderr_method
-    rst$Method        <- "ps_coxphwa"
-    rst$Outcome_type  <- "tte"
-    class(rst)        <- get_rwe_class("ANARST")
+    rst$Method   <- "ps_coxphwa"
+    rst$Outcome_type <- "tte"
+    class(rst)   <- get_rwe_class("ANARST")
     return(rst)
 }
 

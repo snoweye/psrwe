@@ -8,7 +8,6 @@
 #' @inheritParams psrwe_powerp
 #'
 #' @param stderr_method Method for computing StdErr, see Details
-#' @param n_bootstrap Number of bootstrap samples (for bootstrap stderr)
 #' @param ... Parameters for \code{rwe_cl_watt}
 #'
 #' @details \code{stderr_method} include \code{jk} as default
@@ -21,7 +20,7 @@
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
 #'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-#'     methods.
+#'     methods (\code{n_bootstrap = 200} as default).
 #'
 #' @return A data frame with class name \code{PSRWE_RST}. It contains the
 #'     composite estimation of the mean for each stratum as well as the
@@ -47,7 +46,6 @@ psrwe_compl_watt <- function(dta_psbor, v_outcome = "Y",
                              outcome_type = c("continuous", "binary"),
                              stderr_method = c("jk", "sjk", "cjk",
                                                "sbs", "cbs", "none"), 
-                             n_bootstrap = 200,
                              ...) {
 
     ## check
@@ -64,17 +62,35 @@ psrwe_compl_watt <- function(dta_psbor, v_outcome = "Y",
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
     ## call estimation
-    f_get_ps_cl_km_watt <- switch(stderr_method[1],
-                                  jk = get_ps_cl_km_watt,
-                                  sjk = get_ps_cl_km_watt_sjk,
-                                  cjk = get_ps_cl_km_watt_cjk,
-                                  sbs = get_ps_cl_km_watt_sbs,
-                                  cbs = get_ps_cl_km_watt_cbs,
-                                  none = get_ps_cl_km_watt_none)
-    rst <- f_get_ps_cl_km_watt(dta_psbor, v_outcome = v_outcome,
-                               outcome_type = outcome_type,
-                               f_stratum = get_cl_stratum_watt,
-                               ...)
+    if (stderr_method[1] %in% c("jk", "none")) {
+        rst <- get_ps_cl_km_watt(dta_psbor, v_outcome = v_outcome,
+                                 outcome_type = outcome_type,
+                                 f_stratum = get_cl_stratum_watt,
+                                 stderr_method = stderr_method[1],
+                                 ...)
+    } else if (stderr_method[1] %in% c("sjk")) {
+        rst <- get_ps_cl_km_watt_sjk(dta_psbor, v_outcome = v_outcome,
+                                     outcome_type = outcome_type,
+                                     f_stratum = get_cl_stratum_watt,
+                                     ...)
+    } else if (stderr_method[1] %in% c("cjk")) {
+        rst <- get_ps_cl_km_watt_cjk(dta_psbor, v_outcome = v_outcome,
+                                     outcome_type = outcome_type,
+                                     f_stratum = get_cl_stratum_watt,
+                                     ...)
+    } else if (stderr_method[1] %in% c("sbs")) {
+        rst <- get_ps_cl_km_watt_sbs(dta_psbor, v_outcome = v_outcome,
+                                     outcome_type = outcome_type,
+                                     f_stratum = get_cl_stratum_watt,
+                                     ...)
+    } else if (stderr_method[1] %in% c("cbs")) {
+        rst <- get_ps_cl_km_watt_cbs(dta_psbor, v_outcome = v_outcome,
+                                     outcome_type = outcome_type,
+                                     f_stratum = get_cl_stratum_watt,
+                                     ...)
+    } else {
+        stop("stderr_errmethod is not implemented.")
+    }
 
     ## return
     rst$Observed      <- rst_obs
@@ -324,26 +340,3 @@ get_ps_cl_km_watt <- function(dta_psbor,
     return(rst)
 }
 
-
-#' Get estimates for composite likelihood and survival (WATT) skip stderr
-#'
-#'
-#'
-#' @noRd
-#'
-get_ps_cl_km_watt_none <- function(dta_psbor,
-                                   v_outcome     = NULL,
-                                   v_event       = NULL,
-                                   v_time        = NULL,
-                                   f_stratum     = get_cl_stratum_watt,
-                                   f_overall_est = get_overall_est,
-                                   ...) {
-    get_ps_cl_km_watt(dta_psbor,
-                      v_outcome     = v_outcome,
-                      v_event       = v_event,
-                      v_timet       = v_time,
-                      v_stratum     = v_stragum,
-                      f_overall_est = f_overall_est,
-                      stderr_method = "none",
-                      ...)
-}

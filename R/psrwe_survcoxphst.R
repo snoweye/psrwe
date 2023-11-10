@@ -12,7 +12,6 @@
 #' @param v_time Column name corresponding to event time
 #' @param v_event Column name corresponding to event status
 #' @param stderr_method Method for computing StdErr (see Details)
-#' @param n_bootstrap Number of bootstrap samples (for bootstrap stderr)
 #' @param ... Additional Parameters
 #'
 #' @details \code{stderr_method} includes \code{naive} as default which
@@ -26,7 +25,7 @@
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
 #'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-#'     methods.
+#'     methods (\code{n_bootstrap = 200} as default).
 #'
 #'     The PS-integrated coxph method optimizes the composite partial
 #'     likelihood to obtain the point estimate of hazard ratio between
@@ -64,7 +63,6 @@ psrwe_survcoxphst <- function(dta_psbor,
                               v_event       = "event",
                               stderr_method = c("naive", "sjk", "cjk",
                                                 "sbs", "cbs"), 
-                              n_bootstrap = 200,
                               ...) {
 
     ## check
@@ -96,15 +94,38 @@ psrwe_survcoxphst <- function(dta_psbor,
 
     rst <- f_get_ps_coxph(dta_psbor,
                           v_event = v_event, v_time = v_time,
-                          n_bootstrap = n_bootstrap,
                           ...)
+    if (stderr_method[1] %in% c("naive")) {
+        rst <- get_ps_coxph(dta_psbor,
+                            v_event = v_event, v_time = v_time,
+                            stderr_method = stderr_method[1],
+                            ...)
+    } else if(stderr_method[1] == "sjk") {
+        rst <- get_ps_coxph_sjk(dta_psbor,
+                                v_event = v_event, v_time = v_time,
+                                ...)
+    } else if(stderr_method[1] == "cjk") {
+        rst <- get_ps_coxph_cjk(dta_psbor,
+                                v_event = v_event, v_time = v_time,
+                                ...)
+    } else if(stderr_method[1] == "sbs") {
+        rst <- get_ps_coxph_sbs(dta_psbor,
+                                v_event = v_event, v_time = v_time,
+                                ...)
+    } else if(stderr_method[1] == "cbs") {
+        rst <- get_ps_coxph_cbs(dta_psbor,
+                                v_event = v_event, v_time = v_time,
+                                ...)
+    } else {
+        stop("stderr_errmethod is not implemented.")
+    }
 
     ## return
-    rst$Observed      <- rst_obs
+    rst$Observed <- rst_obs
     rst$stderr_method <- stderr_method
-    rst$Method        <- "ps_coxphst"
-    rst$Outcome_type  <- "tte"
-    class(rst)        <- get_rwe_class("ANARST")
+    rst$Method   <- "ps_coxphst"
+    rst$Outcome_type <- "tte"
+    class(rst)   <- get_rwe_class("ANARST")
     return(rst)
 }
 

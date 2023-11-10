@@ -19,7 +19,9 @@ get_ps_cl_km_sjk <- function(dta_psbor,
     rst <- get_ps_cl_km(dta_psbor, v_outcome = v_outcome,
                         v_event = v_event, v_time = v_time,
                         f_stratum = f_stratum,
-                        f_overall_est = f_overall_est, ...)
+                        f_overall_est = f_overall_est,
+                        stderr_method = "none",
+                        ...)
 
     ## simple JK stderr
     rst_sm_ctl <- rst$Control$Stratum_Estimate$Mean
@@ -46,7 +48,9 @@ get_ps_cl_km_sjk <- function(dta_psbor,
         rst_jk <- get_ps_cl_km(dta_psbor_jk, v_outcome = v_outcome,
                                v_event = v_event, v_time = v_time,
                                f_stratum = f_stratum,
-                               f_overall_est = f_overall_est, ...)
+                               f_overall_est = f_overall_est,
+                               stderr_method = "none",
+                               ...)
 
         sdf_sm_ctl <- sdf_sm_ctl + (rst_jk$Control$Stratum_Estimate$Mean -
                                     rst_sm_ctl)^2
@@ -143,7 +147,9 @@ get_ps_cl_km_sbs <- function(dta_psbor,
     rst <- get_ps_cl_km(dta_psbor, v_outcome = v_outcome,
                         v_event = v_event, v_time = v_time,
                         f_stratum = f_stratum,
-                        f_overall_est = f_overall_est, ...)
+                        f_overall_est = f_overall_est,
+                        stderr_method = "none",
+                        ...)
 
     ## simple Bootstrap stderr
     rst_sm_ctl <- rst$Control$Stratum_Estimate$Mean
@@ -187,7 +193,9 @@ get_ps_cl_km_sbs <- function(dta_psbor,
         rst_bs <- get_ps_cl_km(dta_psbor_bs, v_outcome = v_outcome,
                                v_event = v_event, v_time = v_time,
                                f_stratum = f_stratum,
-                               f_overall_est = f_overall_est, ...)
+                               f_overall_est = f_overall_est,
+                               stderr_method = "none",
+                               ...)
 
         sdf_sm_ctl <- sdf_sm_ctl + (rst_bs$Control$Stratum_Estimate$Mean -
                                     rst_sm_ctl)^2

@@ -73,7 +73,9 @@ get_ps_lrk_rmst_sjk <- function(dta_psbor,
     rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
-                           f_overall_est = f_overall_est, ...)
+                           f_overall_est = f_overall_est,
+                           stderr_method = "none",
+                           ...)
 
     ## JK overall stderr
     rst_om <- rst$Effect$Overall_Estimate$Mean
@@ -86,7 +88,9 @@ get_ps_lrk_rmst_sjk <- function(dta_psbor,
         rst_jk <- get_ps_lrk_rmst(dta_psbor_jk, v_outcome = v_outcome,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
-                                  f_overall_est = f_overall_est, ...)
+                                  f_overall_est = f_overall_est,
+                                  stderr_method = "none",
+                                  ...)
         sdf_om <- sdf_om + (rst_jk$Effect$Overall_Estimate$Mean - rst_om)^2
     }
 
@@ -126,7 +130,9 @@ get_ps_lrk_rmst_cjk <- function(dta_psbor,
     rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
-                           f_overall_est = f_overall_est, ...)
+                           f_overall_est = f_overall_est,
+                           stderr_method = "none",
+                           ...)
 
     ## complex JK stderr
     rst_om <- rst$Effect$Overall_Estimate$Mean
@@ -160,7 +166,9 @@ get_ps_lrk_rmst_cjk <- function(dta_psbor,
         rst_jk <- get_ps_lrk_rmst(tmp_rst_jk, v_outcome = v_outcome,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
-                                  f_overall_est = f_overall_est, ...)
+                                  f_overall_est = f_overall_est,
+                                  stderr_method = "none",
+                                  ...)
         sdf_om <- sdf_om + (rst_jk$Effect$Overall_Estimate$Mean - rst_om)^2
     }
 
@@ -198,7 +206,9 @@ get_ps_lrk_rmst_sbs <- function(dta_psbor,
     rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
-                           f_overall_est = f_overall_est, ...)
+                           f_overall_est = f_overall_est,
+                           stderr_method = "none",
+                           ...)
 
     ## bootstrap overall stderr
     rst_om <- rst$Effect$Overall_Estimate$Mean
@@ -229,7 +239,9 @@ get_ps_lrk_rmst_sbs <- function(dta_psbor,
         rst_bs <- get_ps_lrk_rmst(dta_psbor_bs, v_outcome = v_outcome,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
-                                  f_overall_est = f_overall_est, ...)
+                                  f_overall_est = f_overall_est,
+                                  stderr_method = "none",
+                                  ...)
         sdf_om <- sdf_om + (rst_bs$Effect$Overall_Estimate$Mean - rst_om)^2
     }
 
@@ -271,7 +283,9 @@ get_ps_lrk_rmst_cbs <- function(dta_psbor,
     rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
-                           f_overall_est = f_overall_est, ...)
+                           f_overall_est = f_overall_est,
+                           stderr_method = "none",
+                           ...)
 
     ## complex Bootstrap stderr
     rst_om <- rst$Effect$Overall_Estimate$Mean
@@ -318,7 +332,9 @@ get_ps_lrk_rmst_cbs <- function(dta_psbor,
         rst_bs <- get_ps_lrk_rmst(tmp_rst_bs, v_outcome = v_outcome,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
-                                  f_overall_est = f_overall_est, ...)
+                                  f_overall_est = f_overall_est,
+                                  stderr_method = "none",
+                                  ...)
         sdf_om <- sdf_om + (rst_bs$Effect$Overall_Estimate$Mean - rst_om)^2
     }
 
