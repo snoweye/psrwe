@@ -412,18 +412,16 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     is_rct <- dta_psrst$is_rct
     if (is_rct) {
         types_est <- c("Control", "Treatment", "Effect")
+        type <- "Effect"
     } else {
         types_est <- c("Control")
+        type <- "Control"
     }
 
     ## find closest time point (infimum)
     org_pred_tps <- dta_psrst$pred_tp
     if (!is.null(pred_tps)) {
-        if (is_rct) {
-            unique_tps <- sort(unique(dta_psrst$Effect$T))
-        } else {
-            unique_tps <- sort(unique(dta_psrst$Control$T))
-        }
+        unique_tps <- sort(unique(dta_psrst[[type]]$Overall_Estimate$T))
         unique_pred_tps <- sort(unique(pred_tps))
 
         stopifnot(min(unique_pred_tps) >= min(unique_tps))
@@ -461,8 +459,8 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     }
 
     ## subset estimates
-    id_Stratum_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
-    id_Overall_T <- dta_psrst$Control$Overall_Estimate$T %in% org_pred_tps
+    id_Stratum_T <- dta_psrst[[type]]$Overall_Estimate$T %in% org_pred_tps
+    id_Overall_T <- dta_psrst[[type]]$Overall_Estimate$T %in% org_pred_tps
     for (i_type in types_est) {
         if (!is.null(dta_psrst[[i_type]])) {
             dta_psrst[[i_type]]$Stratum_Estimate <-

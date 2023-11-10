@@ -81,7 +81,7 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
                             v_event = v_event, v_time = v_time,
                             f_stratum = get_surv_stratum,
                             pred_tp = all_tps,
-                            stderr_method = stderr_method,
+                            stderr_method = stderr_method[1],
                             ...)
     } else if (stderr_method[1] %in% c("sjk")) {
         rst <- get_ps_cl_km_sjk(dta_psbor,
@@ -112,12 +112,12 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
     }
 
     ## return
-    rst$Observed      <- rst_obs
-    rst$pred_tp       <- pred_tp
+    rst$Observed <- rst_obs
+    rst$pred_tp  <- pred_tp
     rst$stderr_method <- stderr_method
-    rst$Method        <- "ps_km"
-    rst$Outcome_type  <- "tte"
-    class(rst)        <- get_rwe_class("ANARST")
+    rst$Method   <- "ps_km"
+    rst$Outcome_type <- "tte"
+    class(rst)   <- get_rwe_class("ANARST")
     return(rst)
 }
 

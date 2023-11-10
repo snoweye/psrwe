@@ -36,6 +36,17 @@ rst_lrk_sbs <- psrwe_survlrk(ps_bor_rct,
 oa_lrk_sbs <- psrwe_outana(rst_lrk_sbs)
 summary(oa_lrk_sbs, pred_tps = c(180, 365))
 
+### Use simple Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12341)
+rst_lrk_sbs_5h <- psrwe_survlrk(ps_bor_rct,
+                                pred_tp = 365,
+                                v_time = "Y_Surv",
+                                v_event = "Status",
+                                stderr_method = "sbs",
+                                n_bootstrap = 500)
+oa_lrk_sbs_5h <- psrwe_outana(rst_lrk_sbs_5h)
+summary(oa_lrk_sbs_5h, pred_tps = c(180, 365))
+
 ### Use complex Bootstrap stderr. This may take a while longer.
 set.seed(12342)
 rst_lrk_cbs <- psrwe_survlrk(ps_bor_rct,
@@ -46,3 +57,13 @@ rst_lrk_cbs <- psrwe_survlrk(ps_bor_rct,
 oa_lrk_cbs <- psrwe_outana(rst_lrk_cbs)
 summary(oa_lrk_cbs, pred_tps = c(180, 365))
 
+### Use complex Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12342)
+rst_lrk_cbs_5h <- psrwe_survlrk(ps_bor_rct,
+                                pred_tp = 365,
+                                v_time = "Y_Surv",
+                                v_event = "Status",
+                                stderr_method = "cbs",
+                                n_bootstrap = 500)
+oa_lrk_cbs_5h <- psrwe_outana(rst_lrk_cbs_5h)
+summary(oa_lrk_cbs_5h, pred_tps = c(180, 365))

@@ -34,6 +34,17 @@ rst_km_sbs <- psrwe_survkm(ps_bor_single,
 oa_km_sbs <- psrwe_outana(rst_km_sbs, mu = 0.70, alternative = "greater")
 summary(oa_km_sbs, pred_tps = c(180, 365))
 
+### Use simple Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12341)
+rst_km_sbs_5h <- psrwe_survkm(ps_bor_single,
+                              pred_tp  = 365,
+                              v_time    = "Y_Surv",
+                              v_event   = "Status",
+                              stderr_method = "sbs",
+                              n_bootstrap = 500)
+oa_km_sbs_5h <- psrwe_outana(rst_km_sbs_5h, mu = 0.70, alternative = "greater")
+summary(oa_km_sbs_5h, pred_tps = c(180, 365))
+
 ### Use complex Bootstrap stderr. This may take a while longer.
 set.seed(12342)
 rst_km_cbs <- psrwe_survkm(ps_bor_single,
@@ -43,4 +54,15 @@ rst_km_cbs <- psrwe_survkm(ps_bor_single,
                            stderr_method = "cbs")
 oa_km_cbs <- psrwe_outana(rst_km_cbs, mu = 0.70, alternative = "greater")
 summary(oa_km_cbs, pred_tps = c(180, 365))
+
+### Use complex Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12342)
+rst_km_cbs_5h <- psrwe_survkm(ps_bor_single,
+                              pred_tp  = 365,
+                              v_time    = "Y_Surv",
+                              v_event   = "Status",
+                              stderr_method = "cbs",
+                              n_bootstrap = 500)
+oa_km_cbs_5h <- psrwe_outana(rst_km_cbs_5h, mu = 0.70, alternative = "greater")
+summary(oa_km_cbs_5h, pred_tps = c(180, 365))
 

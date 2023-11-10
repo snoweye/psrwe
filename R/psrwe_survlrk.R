@@ -82,40 +82,36 @@ psrwe_survlrk <- function(dta_psbor, pred_tp,
     rst_obs <- NULL
 
     ## call estimation
-    if (stderr_method %in% c("naive", "jk", "none")) {
+    if (stderr_method[1] %in% c("naive", "jk", "none")) {
         rst <- get_ps_lrk_rmst(dta_psbor,
                                v_event = v_event, v_time = v_time,
                                f_stratum = get_surv_stratum_lrk,
                                pred_tps = all_tps,
-                               stderr_method = stderr_method,
+                               stderr_method = stderr_method[1],
                                ...)
-    } else if (stderr_method %in% c("sjk")) {
+    } else if (stderr_method[1] %in% c("sjk")) {
         rst <- get_ps_lrk_rmst_sjk(dta_psbor,
                                    v_event = v_event, v_time = v_time,
                                    f_stratum = get_surv_stratum_lrk,
                                    pred_tps = all_tps,
-                                   stderr_method = "none",
                                    ...)
-    } else if (stderr_method %in% c("cjk")) {
+    } else if (stderr_method[1] %in% c("cjk")) {
         rst <- get_ps_lrk_rmst_cjk(dta_psbor,
                                    v_event = v_event, v_time = v_time,
                                    f_stratum = get_surv_stratum_lrk,
                                    pred_tp = all_tps,
-                                   stderr_method = "none",
                                    ...)
-    } else if (stderr_method %in% c("sbs")) {
+    } else if (stderr_method[1] %in% c("sbs")) {
         rst <- get_ps_lrk_rmst_sbs(dta_psbor,
                                    v_event = v_event, v_time = v_time,
                                    f_stratum = get_surv_stratum_lrk,
                                    pred_tps = all_tps,
-                                   stderr_method = "none",
                                    ...)
-    } else if (stderr_method %in% c("cbs")) {
+    } else if (stderr_method[1] %in% c("cbs")) {
         rst <- get_ps_lrk_rmst_cbs(dta_psbor,
                                    v_event = v_event, v_time = v_time,
                                    f_stratum = get_surv_stratum_lrk,
                                    pred_tp = all_tps,
-                                   stderr_method = "none",
                                    ...)
     } else {
         stop("stderr_errmethod is not implemented.")

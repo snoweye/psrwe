@@ -30,6 +30,16 @@ rst_cl_sbs <- psrwe_compl(ps_bor_single,
 oa_cl_sbs <- psrwe_outana(rst_cl_sbs, mu = 0.4)
 oa_cl_sbs
 
+### Use simple Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12341)
+rst_cl_sbs_5h <- psrwe_compl(ps_bor_single,
+                             outcome_type = "binary",
+                             v_outcome = "Y_Bin",
+                             n_bootstrap = 500,
+                             stderr_method = "sbs")
+oa_cl_sbs_5h <- psrwe_outana(rst_cl_sbs_5h, mu = 0.4)
+oa_cl_sbs_5h
+
 ### Use complex Bootstrap stderr. This may take a while longer.
 set.seed(12342)
 rst_cl_cbs <- psrwe_compl(ps_bor_single,
@@ -38,4 +48,14 @@ rst_cl_cbs <- psrwe_compl(ps_bor_single,
                           stderr_method = "cbs")
 oa_cl_cbs <- psrwe_outana(rst_cl_cbs, mu = 0.4)
 oa_cl_cbs
+
+### Use complex Bootstrap stderr with more samples. This may take a while longer.
+set.seed(12342)
+rst_cl_cbs_5h <- psrwe_compl(ps_bor_single,
+                             outcome_type = "binary",
+                             v_outcome = "Y_Bin",
+                             n_bootstrap = 500,
+                             stderr_method = "cbs")
+oa_cl_cbs_5h <- psrwe_outana(rst_cl_cbs_5h, mu = 0.4)
+oa_cl_cbs_5h
 

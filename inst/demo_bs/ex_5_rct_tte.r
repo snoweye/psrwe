@@ -32,8 +32,7 @@ rst_km_rct_sbs <- psrwe_survkm(ps_bor_rct,
                                pred_tp = 365,
                                v_time = "Y_Surv",
                                v_event = "Status",
-                               stderr_method = "sbs",
-                               n_bootstrap = 500)
+                               stderr_method = "sbs")
 oa_km_rct_sbs <- psrwe_outana(rst_km_rct_sbs, alternative = "greater")
 summary(oa_km_rct_sbs, pred_tps = c(180, 365))
 
