@@ -23,7 +23,7 @@
 #'     combining overall estimates.
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
-#'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
+#'     The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
 #'     methods (\code{n_bootstrap = 200} as default).
 #'
 #' @return A data frame with class name \code{PSRWE_RST}. It contains the

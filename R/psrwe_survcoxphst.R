@@ -17,14 +17,12 @@
 #' @details \code{stderr_method} includes \code{naive} as default which
 #'     mostly follows the calculation provided by
 #'     \code{survival::coxph(..., robust = TURE)},
-#'     \code{sjk} using simple Jackknife method for combined estimates
-#'     such as point estimates in single arm or treatment effects in RCT, or
 #'     \code{cjk} for complex Jackknife method including refitting PS model,
 #'     matching, trimming, calculating borrowing parameters, and
 #'     combining overall estimates.
 #'     Note that \code{sjk} may take a while longer to finish and
 #'     \code{cjk} will take even much longer to finish.
-#'     The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
+#'     The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
 #'     methods (\code{n_bootstrap = 200} as default).
 #'
 #'     The PS-integrated coxph method optimizes the composite partial
@@ -81,41 +79,30 @@ psrwe_survcoxphst <- function(dta_psbor,
 
     ## observed (no need so skip)
     # rst_obs <- get_coxph_observed(data, v_time, v_event)
-    rst_obs <- NA
+    rst_obs <- NULL
 
     ## call estimation
-    f_get_ps_coxph <- switch(stderr_method[1],
-                             sjk = get_ps_coxph_sjk,
-                             cjk = get_ps_coxph_cjk,
-                             sbs = get_ps_coxph_sbs,
-                             cbs = get_ps_coxph_cbs,
-                             naive = get_ps_coxph,
-                             stop("stderr_method is not implemented."))
-
-    rst <- f_get_ps_coxph(dta_psbor,
-                          v_event = v_event, v_time = v_time,
-                          ...)
     if (stderr_method[1] %in% c("naive")) {
-        rst <- get_ps_coxph(dta_psbor,
-                            v_event = v_event, v_time = v_time,
-                            stderr_method = stderr_method[1],
-                            ...)
+        rst <- get_ps_coxphst(dta_psbor,
+                              v_event = v_event, v_time = v_time,
+                              stderr_method = stderr_method[1],
+                              ...)
     } else if(stderr_method[1] == "sjk") {
-        rst <- get_ps_coxph_sjk(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                ...)
+        rst <- get_ps_coxphst_sjk(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  ...)
     } else if(stderr_method[1] == "cjk") {
-        rst <- get_ps_coxph_cjk(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                ...)
+        rst <- get_ps_coxphst_cjk(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  ...)
     } else if(stderr_method[1] == "sbs") {
-        rst <- get_ps_coxph_sbs(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                ...)
+        rst <- get_ps_coxphst_sbs(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  ...)
     } else if(stderr_method[1] == "cbs") {
-        rst <- get_ps_coxph_cbs(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                ...)
+        rst <- get_ps_coxphst_cbs(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  ...)
     } else {
         stop("stderr_errmethod is not implemented.")
     }
@@ -135,10 +122,10 @@ psrwe_survcoxphst <- function(dta_psbor,
 #'
 #' @noRd
 #'
-get_ps_coxph <- function(dta_psbor,
-                         v_event   = NULL,
-                         v_time    = NULL,
-                         ...) {
+get_ps_coxphst <- function(dta_psbor,
+                           v_event   = NULL,
+                           v_time    = NULL,
+                           ...) {
 
     ## prepare data
     data    <- dta_psbor$data

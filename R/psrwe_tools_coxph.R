@@ -8,7 +8,7 @@ get_ps_coxph <- function(dta_psbor,
                          v_event       = NULL,
                          v_time        = NULL,
                          f_stratum     = get_surv_stratum_coxph,
-                         f_overall_est = get_overall_est_coxph_stratified,
+                         f_overall_est = get_overall_est_coxphst,
                          ...) {
 
     ## prepare data
