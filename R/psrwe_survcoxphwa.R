@@ -90,7 +90,6 @@ psrwe_survcoxphwa <- function(dta_psbor,
     return(rst)
 }
 
-
 #' Get estimates for Cox proportional hazard between two arms
 #' for RCT augmenting control (weighted average approach)
 #'
@@ -140,7 +139,6 @@ get_ps_coxphwa <- function(dta_psbor,
                  is_rct       = dta_psbor$is_rct)
     return(rst)
 }
-
 
 #' Get coxph estimation for each stratum (weighted average approach)
 #'
@@ -201,7 +199,6 @@ get_surv_stratum_coxphwa <- function(d1, d0 = NULL, d1t, n_borrow = 0,
 
     return(overall)
 }
-
 
 #' The coxph estimation (weighted average approach)
 #'
@@ -278,5 +275,4 @@ rwe_coxphwa <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
     colnames(rst_coxph) <- c("Mean", "StdErr", "T")
     return(rst_coxph)
 }
-
 

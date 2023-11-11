@@ -19,25 +19,25 @@ get_ps_coxphst <- function(dta_psbor,
     nstrata <- length(strata)
     borrow  <- dta_psbor$Borrow$N_Borrow
 
-    ## estimate
-    eff_theta <- NULL
+    ## rearrange data
+    v_covs <- c(v_time, v_event, "_grp_", "_arm_")
+    cur_d1  <- NULL
+    cur_d0  <- NULL
+    cur_d1t <- NULL
     for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data,
-                             strata[i],
-                             c(v_outcome, v_time, v_event))
+        cur_01  <- get_cur_d(data, strata[i], v_covs)
 
-        cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
-        cur_d0  <- cur_01$cur_d0
-        cur_d1t <- cur_01$cur_d1t
-
-        ## effect with borrowing
-        cur_effect   <- f_stratum(cur_d1, cur_d0, cur_d1t,
-                                  n_borrow = borrow[i], ...)
-        eff_theta <- rbind(eff_theta, cur_effect)
+        cur_d1  <- rbind(cur_d1, cur_01$cur_d1)    ## This is "cur_d1c"
+        cur_d0  <- rbind(cur_d0, cur_01$cur_d0)
+        cur_d1t <- rbind(cur_d1t, cur_01$cur_d1t)
     }
 
+    ## effect with borrowing
+    cur_effect   <- get_surv_coxphst(cur_d1, cur_d0, cur_d1t,
+                                     n_borrow = borrow, ...)
+
     ## summary
-    rst_effect <- f_overall_est(eff_theta, dta_psbor$Borrow$N_Current)
+    rst_effect <- f_overall_est(eff_theta)
 
     ## return
     rst <-  list(Control   = NULL,
@@ -49,4 +49,17 @@ get_ps_coxphst <- function(dta_psbor,
     return(rst)
 }
 
+#' Summarize overall theta for coxph (stratified approach)
+#'
+#'
+#' @noRd
+#'
+get_overall_est_coxphst <- function(ts1) {
+    o_est <- data.frame(Mean   = ts1[, 1],
+                        StdErr = ts1[, 2]
+                        T      = ts1[, 3])
+
+    list(Stratum_Estimate = NULL,
+         Overall_Estimate = o_est)
+}
 

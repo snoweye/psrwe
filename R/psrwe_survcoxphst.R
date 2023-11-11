@@ -116,53 +116,106 @@ psrwe_survcoxphst <- function(dta_psbor,
     return(rst)
 }
 
-
-#' Get estimates for Cox proportional hazard between two arms
-#' for RCT augmenting control (stratified approach)
+#' Get coxph estimation for each stratum (weighted average approach)
+#'
 #'
 #' @noRd
 #'
-get_ps_coxphst <- function(dta_psbor,
-                           v_event   = NULL,
-                           v_time    = NULL,
-                           ...) {
+get_surv_coxphst <- function(d1, d0 = NULL, d1t, n_borrow = 0,
+                             ...) {
 
-    ## prepare data
-    data    <- dta_psbor$data
-    data    <- data[!is.na(data[["_strata_"]]), ]
+    ## treatment or control only
+    dta_cur <- d1
+    dta_ext <- d0
+    dta_cur_trt <- d1t
+    ns1     <- nrow(dta_cur)
+    ns1_trt <- nrow(dta_cur_trt)
 
-    strata  <- levels(data[["_strata_"]])
-    nstrata <- length(strata)
-    borrow  <- dta_psbor$Borrow$N_Borrow
-
-    ## rearrange data
-    v_covs <- c(v_time, v_event, "_grp_", "_arm_")
-    cur_d1  <- NULL
-    cur_d0  <- NULL
-    cur_d1t <- NULL
-    for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data, strata[i], v_covs)
-
-        cur_d1  <- rbind(cur_d1, cur_01$cur_d1)    ## This is "cur_d1c"
-        cur_d0  <- rbind(cur_d0, cur_01$cur_d0)
-        cur_d1t <- rbind(cur_d1t, cur_01$cur_d1t)
+    if (is.null(d0)) {
+        ns0 <- 0
+    } else {
+        ns0 <- nrow(dta_ext)
     }
-### I am here.
 
-    ## effect with borrowing
-    cur_effect   <- get_surv_coxphst(cur_d1, cur_d0, cur_d1t,
-                                     n_borrow = borrow, ...)
+    ## overall estimate
+    overall  <- rwe_coxphwa(dta_cur, dta_ext, dta_cur_trt, n_borrow)
 
-    ## summary
-    rst_effect <- f_overall_est(eff_theta, dta_psbor$Borrow$N_Current)
+    return(overall)
+}
 
-    ## return
-    rst <-  list(Control   = NULL,
-                 Treatment = NULL,
-                 Effect    = rst_effect,
-                 Borrow    = dta_psbor$Borrow,
-                 Total_borrow = dta_psbor$Total_borrow,
-                 is_rct       = dta_psbor$is_rct)
-    return(rst)
+#' The coxph estimation (stratified approach)
+#'
+#' Estimate overall coxph estimate with all strata together
+#'
+#'
+#' @param dta_cur Matrix of time and event from a PS stratum in current study
+#'                (control arm only)
+#' @param dta_ext Matrix of time and event from a PS stratum in external data
+#'                source (control arm only)
+#' @param dta_cur_trt Matrix of time and event from a PS stratum in current
+#'                    study (treatment arm only)
+#' @param n_borrow Number of subjects to be borrowed
+#' @param stderr_method Method for computing StdErr (available for naive only)
+#'
+#' @return Estimation of overall coxph estimate
+#'
+#'
+#' @export
+#'
+rwe_coxphst <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
+                        stderr_method = "naive") {
+
+    ## current control and external control if available
+    cur_data    <- dta_cur
+    ns1         <- nrow(dta_cur)
+    cur_weights <- rep(1, ns1)
+
+    if (n_borrow > 0) {
+        ns0         <- nrow(dta_ext)
+        cur_data    <- rbind(cur_data, dta_ext)
+        cur_weights <- c(cur_weights,
+                         rep(n_borrow / ns0, ns0))
+    }
+
+    ## trt arm
+    cur_data_trt    <- dta_cur_trt
+    ns1_trt         <- nrow(dta_cur_trt)
+    cur_weights_trt <- rep(1, ns1_trt)
+
+    ## Combine data of two arms together
+    cur_data <- cbind(cur_data, 0)
+    cur_data_trt <- cbind(cur_data_trt, 1)
+    cur_data_comb <- rbind(cur_data_trt, cur_data)
+    cur_data_comb <- data.frame(cur_data_comb)
+    colnames(cur_data_comb) <- c("time", "event", "stratum", "arm")
+
+    ## w_i in the same order of cur_data_comb
+    cur_weights_comb <- c(cur_weights_trt, cur_weights)
+
+    ## Cox proportional hazard
+    cur_coxph <- coxph(Surv(time, event) ~ arm + strata(stragum),
+                       data   = cur_data_comb,
+                       weight = cur_weights_comb,
+                       ties   = "breslow",
+                       robust = TRUE)
+    mean_d <- cur_coxph$coefficients
+
+    ## summary.coxph() does not do prediction, see predict.coxph().
+    pred_tp <- max(cur_data_comb$time)
+
+    ## for coxph naive stderr
+    if (stderr_method == "naive") {
+        ## robust se when "robust = TRUE" in coxph()
+        stderr_d <- sqrt(cur_coxph$coefficients)
+    } else {
+        ## for none, jk, sjk, cjk, sbs, or cbs
+        stderr_d <- NA
+    }
+
+    ## combine coxph estimates
+    rst_coxph <- c(mean_d, stderr_d, pred_tp)
+
+    colnames(rst_coxph) <- c("Mean", "StdErr", "T")
+    return(rst_coxph)
 }
 
