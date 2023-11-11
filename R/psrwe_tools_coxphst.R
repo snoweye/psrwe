@@ -1,15 +1,15 @@
 #' Get estimates for Cox proportional hazard between two arms
-#' for RCT augmenting control
+#' for RCT augmenting control (stratified approach)
 #'
 #' @noRd
 #'
-get_ps_coxph <- function(dta_psbor,
-                         v_outcome     = NULL,
-                         v_event       = NULL,
-                         v_time        = NULL,
-                         f_stratum     = get_surv_stratum_coxph,
-                         f_overall_est = get_overall_est_coxphst,
-                         ...) {
+get_ps_coxphst <- function(dta_psbor,
+                           v_outcome     = NULL,
+                           v_event       = NULL,
+                           v_time        = NULL,
+                           f_stratum     = NULL,
+                           f_overall_est = get_overall_est_coxphst,
+                           ...) {
 
     ## prepare data
     data    <- dta_psbor$data
