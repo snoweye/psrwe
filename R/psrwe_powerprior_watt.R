@@ -472,11 +472,6 @@ get_stan_data_wattcon <- function(dta_psbor, v_outcome,
                           N1        = length(ctl_y1),
                           Y1        = as.array(ctl_y1))
 
-    ### feed observed SD0 back to stan
-    if (sds_method[1] == "known_sd0") {
-        ctl_lst_data$SD0 <- SD0
-    }
-
     trt_lst_data <- NULL
     if (is_rct) {
         trt_lst_data  <- list(A         = 0,
@@ -485,6 +480,14 @@ get_stan_data_wattcon <- function(dta_psbor, v_outcome,
                               A_WATT_DI = as.array(0),
                               N1        = length(trt_y1),
                               Y1        = as.array(trt_y1))
+    }
+
+    ## feed observed SD0 back to stan
+    if (sds_method[1] == "known_sd0") {
+        ctl_lst_data$SD0 <- SD0
+        if (is_rct) {
+            trt_lst_data$SD0 <- 0
+        }
     }
 
     list(ctl = ctl_lst_data,
