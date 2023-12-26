@@ -31,8 +31,7 @@ must be one of \code{"less"} (default) or \code{"greater"}, or
 \code{"two_sided"} (for log-rank and RMST only)}
 
 \item{mu}{A number indicating the true value of the parameter of interest
-(or the difference in means for two arms),
-\code{mu = 0} when the test is log-rank or RMST}
+(or the difference in means for two arms)}
 
 \item{method_pval}{A method name for p-value (default wald),
 no impact for Bayesian method, and
