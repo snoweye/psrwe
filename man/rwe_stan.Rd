@@ -6,7 +6,7 @@
 \usage{
 rwe_stan(
   lst_data,
-  stan_mdl = c("powerps", "powerpsbinary", "powerp"),
+  stan_mdl = c("powerps", "powerpsbinary", "powerp", "powerps_wattcon"),
   chains = 4,
   iter = 2000,
   warmup = 1000,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/psrwe_survkm.R
 \name{psrwe_survkm}
 \alias{psrwe_survkm}
-\title{PS-Integrated Kaplan-Meier Estimation}
+\title{PS-integrated Kaplan-Meier estimation}
 \usage{
 psrwe_survkm(
   dta_psbor,
@@ -10,7 +10,6 @@ psrwe_survkm(
   v_time = "time",
   v_event = "event",
   stderr_method = c("naive", "jk", "sjk", "cjk", "sbs", "cbs", "none"),
-  n_bootstrap = 200,
   ...
 )
 }
@@ -26,8 +25,6 @@ psrwe_survkm(
 \item{v_event}{Column name corresponding to event status}
 
 \item{stderr_method}{Method for computing StdErr, see Details}
-
-\item{n_bootstrap}{Number of bootstrap samples (for bootstrap stderr)}
 
 \item{...}{Additional Parameters}
 }
@@ -55,8 +52,8 @@ methods. Apply to the case when there is only one external data source.
     combining overall estimates.
     Note that \code{sjk} may take a while longer to finish and
     \code{cjk} will take even much longer to finish.
-    The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-    methods.
+    The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
+    methods (\code{n_bootstrap = 200} as default).
 }
 \examples{
 data(ex_dta)

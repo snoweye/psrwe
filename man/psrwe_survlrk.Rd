@@ -2,7 +2,7 @@
 % Please edit documentation in R/psrwe_survlrk.R
 \name{psrwe_survlrk}
 \alias{psrwe_survlrk}
-\title{PS-Integrated Log-Rank Test For Comparing Time-to-event Outcomes}
+\title{PS-integrated log-rank test for comparing time-to-event outcomes}
 \usage{
 psrwe_survlrk(
   dta_psbor,
@@ -10,7 +10,6 @@ psrwe_survlrk(
   v_time = "time",
   v_event = "event",
   stderr_method = c("naive", "jk", "sjk", "cjk", "sbs", "cbs", "none"),
-  n_bootstrap = 200,
   ...
 )
 }
@@ -26,8 +25,6 @@ psrwe_survlrk(
 \item{v_event}{Column name corresponding to event status}
 
 \item{stderr_method}{Method for computing StdErr (see Details)}
-
-\item{n_bootstrap}{Number of bootstrap samples (for bootstrap stderr)}
 
 \item{...}{Additional Parameters}
 }
@@ -56,8 +53,8 @@ two-arm RCT.
     combining overall estimates.
     Note that \code{sjk} may take a while longer to finish and
     \code{cjk} will take even much longer to finish.
-    The \code{sbs} and \code{cbs} is for simple and complex Bootstrap
-    methods.
+    The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
+    methods (\code{n_bootstrap = 200} as default).
 }
 \examples{
 data(ex_dta_rct)
