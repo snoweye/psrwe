@@ -17,7 +17,16 @@
 #' @details \code{stderr_method} includes \code{naive} as default which
 #'     mostly follows the calculation provided by
 #'     \code{survival::coxph(..., robust = TRUE)}, and
-#'     \code{jk} using Jackknife method within each stratum.
+#'     \code{jk} using Jackknife method within each stratum,
+#'     \code{sjk} using simple Jackknife method for combined estimates
+#'     such as point estimates in single arm or treatment effects in RCT, or
+#'     \code{cjk} for complex Jackknife method including refitting PS model,
+#'     matching, trimming, calculating borrowing parameters, and
+#'     combining overall estimates.
+#'     Note that \code{sjk} may take a while longer to finish and
+#'     \code{cjk} will take even much longer to finish.
+#'     The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
+#'     methods (\code{n_bootstrap = 200} as default).
 #'
 #'     Naive approach calculates log hazard ratio by each stratum, then
 #'     takes weighted average of all stratum-specific estimates as other
@@ -50,7 +59,8 @@
 psrwe_survcoxphwa <- function(dta_psbor,
                               v_time        = "time",
                               v_event       = "event",
-                              stderr_method = c("naive", "jk"), 
+                              stderr_method = c("naive", "jk", "sjk", "cjk",
+                                                "sbs", "cbs", "none"), 
                               ...) {
 
     ## check
@@ -72,11 +82,31 @@ psrwe_survcoxphwa <- function(dta_psbor,
     rst_obs <- NULL
 
     ## call estimation
-    if (stderr_method[1] %in% c("naive", "jk")) {
+    if (stderr_method[1] %in% c("naive", "jk", "none")) {
         rst <- get_ps_coxphwa(dta_psbor,
                               v_event = v_event, v_time = v_time,
                               stderr_method = stderr_method[1],
                               ...)
+    } else if (stderr_method[1] %in% c("sjk")) {
+        rst <- get_ps_coxphwa_sjk(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  stderr_method = stderr_method[1],
+                                  ...)
+    } else if (stderr_method[1] %in% c("cjk")) {
+        rst <- get_ps_coxphwa_cjk(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  stderr_method = stderr_method[1],
+                                  ...)
+    } else if (stderr_method[1] %in% c("sbs")) {
+        rst <- get_ps_coxphwa_sbs(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  stderr_method = stderr_method[1],
+                                  ...)
+    } else if (stderr_method[1] %in% c("cbs")) {
+        rst <- get_ps_coxphwa_cbs(dta_psbor,
+                                  v_event = v_event, v_time = v_time,
+                                  stderr_method = stderr_method[1],
+                                  ...)
     } else {
         stop("stderr_errmethod is not implemented.")
     }
@@ -171,14 +201,14 @@ get_surv_stratum_coxphwa <- function(d1, d0 = NULL, d1t, n_borrow = 0,
 
         jk_theta      <- rep(0, length(overall_theta))
         for (j in seq_len(ns1)) {
-            cur_jk   <- rwe_coxphwa(dta_cur[-j, ], dta_ext, dta_cur_trt, n_borrow,
-                                    stderr_method)
+            cur_jk   <- rwe_coxphwa(dta_cur[-j, ], dta_ext, dta_cur_trt,
+                                    n_borrow, stderr_method)
             jk_theta <- jk_theta + (cur_jk[, 1] - overall_theta)^2
         }
 
         for (j in seq_len(ns1_trt)) {
-            cur_jk   <- rwe_coxphwa(dta_cur, dta_ext, dta_cur_trt[-j, ], n_borrow,
-                                    stderr_method)
+            cur_jk   <- rwe_coxphwa(dta_cur, dta_ext, dta_cur_trt[-j, ],
+                                    n_borrow, stderr_method)
             jk_theta <- jk_theta + (cur_jk[, 1] - overall_theta)^2
         }
 
@@ -263,16 +293,16 @@ rwe_coxphwa <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
     ## for coxph naive stderr
     if (stderr_method == "naive") {
         ## robust se when "robust = TRUE" in coxph()
-        stderr_d <- sqrt(cur_coxph$coefficients)
+        stderr_d <- sqrt(cur_coxph$var)
     } else {
         ## for none, jk, sjk, cjk, sbs, or cbs
         stderr_d <- NA
     }
 
     ## combine coxph estimates
-    rst_coxph <- c(mean_d, stderr_d, pred_tp)
-
-    colnames(rst_coxph) <- c("Mean", "StdErr", "T")
+    rst_coxph <- data.frame(Mean   = mean_d,
+                            StdErr = stderr_d,
+                            T      = pred_tp)
     return(rst_coxph)
 }
 

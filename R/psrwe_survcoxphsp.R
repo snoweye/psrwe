@@ -2,7 +2,8 @@
 #' comparing time-to-event outcomes (same proportion approach)
 #'
 #' Cox proportional hazard (coxph) method evaluates two-arm RCT via
-#' PS-integrated method (same proportion approach).
+#' PS-integrated method (same proportion approach) via
+#' stratified proportional hazard model.
 #' Variance can be estimated by Jackknife methods.
 #' Apply to the case when there is only one external data source and
 #' two-arm RCT.
@@ -116,31 +117,54 @@ psrwe_survcoxphsp <- function(dta_psbor,
     return(rst)
 }
 
-#' Get coxph estimation for each stratum (same proportion approach)
-#'
+#' Get estimates for Cox proportional hazard between two arms
+#' for RCT augmenting control (same proportion approach)
 #'
 #' @noRd
 #'
-get_surv_coxphsp <- function(d1, d0 = NULL, d1t, n_borrow = 0,
-                             ...) {
+get_ps_coxphsp <- function(dta_psbor,
+                           v_event       = NULL,
+                           v_time        = NULL,
+                           f_stratum     = NULL,
+                           f_overall_est = NULL,
+                           ...) {
 
-    ## treatment or control only
-    dta_cur <- d1
-    dta_ext <- d0
-    dta_cur_trt <- d1t
-    ns1     <- nrow(dta_cur)
-    ns1_trt <- nrow(dta_cur_trt)
+    ## prepare data
+    data    <- dta_psbor$data
+    data    <- data[!is.na(data[["_strata_"]]), ]
 
-    if (is.null(d0)) {
-        ns0 <- 0
-    } else {
-        ns0 <- nrow(dta_ext)
+    strata  <- levels(data[["_strata_"]])
+    nstrata <- length(strata)
+    borrow  <- dta_psbor$Borrow$N_Borrow
+
+    ## arrange data
+    v_covs <- c(v_time, v_event, "_strata_")
+    cur_d1  <- NULL
+    cur_d0  <- NULL
+    cur_d1t <- NULL
+    for (i in seq_len(nstrata)) {
+        cur_01  <- get_cur_d(data, strata[i], v_covs)
+
+        cur_d1  <- rbind(cur_d1, cur_01$cur_d1)    ## This is "cur_d1c"
+        cur_d0  <- rbind(cur_d0, cur_01$cur_d0)
+        cur_d1t <- rbind(cur_d1t, cur_01$cur_d1t)
     }
 
-    ## overall estimate
-    overall  <- rwe_coxphwa(dta_cur, dta_ext, dta_cur_trt, n_borrow)
+    ## estimate
+    overall_theta <- rwe_coxphsp(cur_d1, cur_d0, cur_d1t, n_borrow = borrow)
 
-    return(overall)
+    ## summary
+    rst_effect <- list(Stratum_Estimate = NULL,
+                       Overall_Estimate = overall_theta)
+
+    ## return
+    rst <-  list(Control   = NULL,
+                 Treatment = NULL,
+                 Effect    = rst_effect,
+                 Borrow    = dta_psbor$Borrow,
+                 Total_borrow = dta_psbor$Total_borrow,
+                 is_rct       = dta_psbor$is_rct)
+    return(rst)
 }
 
 #' The coxph estimation (same proportion approach)
@@ -193,7 +217,7 @@ rwe_coxphsp <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
     cur_weights_comb <- c(cur_weights_trt, cur_weights)
 
     ## Cox proportional hazard
-    cur_coxph <- coxph(Surv(time, event) ~ arm + strata(stragum),
+    cur_coxph <- coxph(Surv(time, event) ~ arm + strata(stratum),
                        data   = cur_data_comb,
                        weight = cur_weights_comb,
                        ties   = "breslow",
@@ -206,16 +230,16 @@ rwe_coxphsp <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
     ## for coxph naive stderr
     if (stderr_method == "naive") {
         ## robust se when "robust = TRUE" in coxph()
-        stderr_d <- sqrt(cur_coxph$coefficients)
+        stderr_d <- sqrt(cur_coxph$var)
     } else {
         ## for none, jk, sjk, cjk, sbs, or cbs
         stderr_d <- NA
     }
 
     ## combine coxph estimates
-    rst_coxph <- c(mean_d, stderr_d, pred_tp)
-
-    colnames(rst_coxph) <- c("Mean", "StdErr", "T")
+    rst_coxph <- data.frame(Mean   = mean_d,
+                            StdErr = stderr_d,
+                            T      = pred_tp)
     return(rst_coxph)
 }
 
