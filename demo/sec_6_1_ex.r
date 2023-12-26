@@ -28,7 +28,7 @@ rst_coxphwa_rct <- psrwe_survcoxphwa(ps_bor_rct,
 rst_coxphwa_rct
 
 ### Outcome analysis.
-oa_coxphwa_rct <- psrwe_outana(rst_coxphwa_rct, alternative = "greater")
+oa_coxphwa_rct <- psrwe_outana(rst_coxphwa_rct, alternative = "less")
 oa_coxphwa_rct
 print(oa_coxphwa_rct, show_rct = TRUE)
 summary(oa_coxphwa_rct)
@@ -38,6 +38,6 @@ rst_coxphwa_rct_sjk <- psrwe_survcoxphwa(ps_bor_rct,
                                          v_time = "Y_Surv",
                                          v_event = "Status",
                                          stderr_method = "sjk")
-oa_coxphwa_rct_sjk <- psrwe_outana(rst_coxphwa_rct_sjk, alternative = "greater")
+oa_coxphwa_rct_sjk <- psrwe_outana(rst_coxphwa_rct_sjk, alternative = "less")
 summary(oa_coxphwa_rct_sjk)
 

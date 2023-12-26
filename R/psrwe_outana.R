@@ -13,8 +13,7 @@
 #'        must be one of \code{"less"} (default) or \code{"greater"}, or
 #'        \code{"two_sided"} (for log-rank and RMST only)
 #' @param mu A number indicating the true value of the parameter of interest
-#'        (or the difference in means for two arms),
-#'        \code{mu = 0} when the test is log-rank or RMST
+#'        (or the difference in means for two arms)
 #' @param method_pval A method name for p-value (default wald),
 #'        no impact for Bayesian method, and
 #'        \code{method = "score"} only is for binary outcome in
@@ -264,12 +263,12 @@ print.PSRWE_RST_OUTANA <- function(x,
 		  ", Level: ", ci$Conf_int,
                   sep = ""))
 
-        if (!is.na(ci$Conf_type)) {
+        if (!is.null(ci$Conf_type)) {
             cat(paste(", Type: ", ci$Conf_type,
                       sep = ""))
         }
 
-        if (!is.na(ci$Conf_stderr)) {
+        if (!is.null(ci$Conf_stderr)) {
             cat(paste(", Stderr: ", ci$Conf_stderr,
                       sep = ""))
         }
@@ -299,7 +298,7 @@ print.PSRWE_RST_OUTANA <- function(x,
                 poi <- "auc(S_trt)-auc(S_ctl)"
             } else if (x_outana$Analysis_Setup$Method %in%
                        c("ps_coxphwa", "ps_coxphsp")) {
-                poi <- "log(hr trt/ctl)"
+                poi <- "log_hr(trt/ctl)"
             } else {
               stop("The method is not implemented.")
             }

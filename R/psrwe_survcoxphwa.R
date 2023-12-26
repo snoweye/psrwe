@@ -141,11 +141,10 @@ get_ps_coxphwa <- function(dta_psbor,
     borrow  <- dta_psbor$Borrow$N_Borrow
 
     ## estimate
+    v_covs <- c(v_time, v_event, "_arm_")
     eff_theta <- NULL
     for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data,
-                             strata[i],
-                             c(v_time, v_event))
+        cur_01  <- get_cur_d(data, strata[i], v_covs)
 
         cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
         cur_d0  <- cur_01$cur_d0
@@ -270,10 +269,7 @@ rwe_coxphwa <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
     cur_weights_trt <- rep(1, ns1_trt)
 
     ## Combine data of two arms together
-    cur_data <- cbind(cur_data, 0)
-    cur_data_trt <- cbind(cur_data_trt, 1)
     cur_data_comb <- rbind(cur_data_trt, cur_data)
-    cur_data_comb <- data.frame(cur_data_comb)
     colnames(cur_data_comb) <- c("time", "event", "arm")
 
     ## w_i in the same order of cur_data_comb

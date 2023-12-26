@@ -423,6 +423,9 @@ print.PSRWE_RST <- function(x, ...) {
         } else if(x$Method == "ps_rmst") {
             extra_2 <- "RMST statistic"
             extra_2_param <- "auc(S_trt)-auc(S_ctl)"
+        } else if(x$Method %in% c("ps_coxphwa", "ps_coxphsp")) {
+            extra_2 <- "CoxPH statistic (log hr)"
+            extra_2_param <- "log_hr(trt/ctl)"
         } else {
           stop("The method is not implemented.")
         }
@@ -509,19 +512,13 @@ print.PSRWE_RST <- function(x, ...) {
 #' @export
 #'
 plot.PSRWE_RST <- function(x, ...) {
-    rst <- switch(x$Method,
-                  ps_pp = plot_pp_rst(x, ...),
-                  ps_km = plot_km_rst(x, ...),
-                  ps_cl = {
-                      stop("This method is currently unavailable
-                            for composite likelihood analysis.")
-                  },
-                  ps_lrk = {
-                      stop("This method is currently unavailable.")
-                  },
-                  ps_rmst = {
-                      stop("This method is currently unavailable.")
-                  })
-
+    if (x$Method %in% c("ps_cl", "ps_lrk", "ps_rmst",
+                        "ps_coxphwa", "pscoxphsp")) {
+        stop("This method is currently unavailable.")
+    } else {
+        rst <- switch(x$Method,
+                      ps_pp = plot_pp_rst(x, ...),
+                      ps_km = plot_km_rst(x, ...))
+    }
     rst
 }

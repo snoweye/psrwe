@@ -6,10 +6,9 @@
 #' @param dta_psrst A returned object with class \code{PSRWE_EST}
 #' @param alternative A character string for the alternative hypothesis that
 #'        must be one of \code{"less"} (default), \code{"greater"}, or
-#'        \code{"two_sided"} (for log-rank and RMST only)
+#'        \code{"two_sided"}
 #' @param mu A number indicating the true value of the parameter of interest
-#'        (or the difference in means for two arms),
-#'        \code{mu = 0} when the test is log-rank or RMST
+#'        (or the difference in means for two arms)
 #' @param method_pval A method name for p-value (default wald),
 #'        no impact for Bayesian method, and
 #'        \code{method = "score"} only is for binary outcome in
@@ -55,10 +54,6 @@ psrwe_infer <- function(dta_psrst,
                                             alternative,
                                             mu)
     } else {
-        if (dta_psrst$Method %in% c("ps_lrk", "ps_rmst")) {
-            alternative <- "two_sided"
-            mu <- 0
-        }
         rst_psinfer <- get_psinfer_freq(dta_psrst,
                                         alternative,
                                         mu,
@@ -91,11 +86,12 @@ get_psinfer_bayesian <- function(dta_psrst,
 
     ## prepare for the return object
     rst_psinfer <- list(Control = NULL,
+                        Treatment = NULL,
                         Effect = NULL,
                         Method_infer = "posterior probability",
                         Alternative = alternative,
                         Mu = mu,
-                        Method_pval = NA)
+                        Method_pval = NULL)
 
     ## by study type
     rst_psinfer[[type]]$Stratum_InferProb <-
@@ -162,6 +158,7 @@ get_psinfer_freq <- function(dta_psrst,
 
     ## prepare for the return object
     rst_psinfer <- list(Control = NULL,
+                        Treatment = NULL,
                         Effect = NULL,
                         Method_infer = "p_value",
                         Alternative = alternative,

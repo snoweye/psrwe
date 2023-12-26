@@ -45,7 +45,7 @@ psrwe_ci <- function(dta_psrst,
     outcome_type <- dta_psrst$Outcome_type
 
     stopifnot(!(method_ci == "wilson" && outcome_type != "binary"))
-    conf_type <- ifelse(outcome_type == "tte", match.arg(conf_type), NA)
+    conf_type <- ifelse(outcome_type == "tte", match.arg(conf_type), NuLL)
 
     ## get ci by method
     if (dta_psrst$Method == "ps_pp") {
@@ -65,6 +65,13 @@ psrwe_ci <- function(dta_psrst,
                                 conf_int,
                                 conf_type,
                                 ...)
+    } else if (dta_psrst$Method %in% c("ps_coxphwa", "ps_coxphsp")) {
+        rst_psci <- get_psci_freq(dta_psrst,
+                                  method_ci = "wald",
+                                  conf_int,
+                                  ...)
+    } else {
+        stop("Method is not implemented.")
     }
 
     ## return
@@ -92,9 +99,9 @@ get_psci_bayesian <- function(dta_psrst,
                      Treatment = NULL,
                      Effect = NULL,
                      Method_ci = "credible interval",
-                     Conf_type = NA,
+                     Conf_type = NULL,
                      Conf_int = conf_int,
-                     Conf_stderr = NA)
+                     Conf_stderr = NULL)
 
     ## by study type
     rst_psci$Control$Stratum_Estimate <-
@@ -183,9 +190,9 @@ get_psci_freq <- function(dta_psrst,
                      Treatment = NULL,
                      Effect = NULL,
                      Method_ci = method_ci,
-                     Conf_type = NA,
+                     Conf_type = NULL,
                      Conf_int = conf_int,
-                     Conf_stderr = NA)
+                     Conf_stderr = NULL)
 
     if (method_ci == "wilson") {
         tmp_conf_stderr <- list(...)$conf_stderr
@@ -247,7 +254,7 @@ get_psci_freq <- function(dta_psrst,
                               ...)
 
             ## TODO: Derive score method
-            rst_psci$Effect$Overall_Estimate <- NA
+            rst_psci$Effect$Overall_Estimate <- NULL
         }
     }
 
@@ -266,19 +273,22 @@ get_fci <- function(x,
 
     method_ci <- match.arg(method_ci)
 
-    if (method_ci == "wald") {
-        rst <- get_fci_wald(x$Mean,
-                            x$StdErr,
-                            conf_int = conf_int,
-                            ...)
-    } else if (method_ci == "wilson") {
-        rst <- get_fci_wilson(x$Mean,
-                              x$StdErr,
-                              n,
-                              conf_int = conf_int,
-                              ...)
-    } else {
-        stop("Confidence interval method is not implemented.")
+    rst <- NULL
+    if (!is.null(x)) {
+        if (method_ci == "wald") {
+            rst <- get_fci_wald(x$Mean,
+                                x$StdErr,
+                                conf_int = conf_int,
+                                ...)
+        } else if (method_ci == "wilson") {
+            rst <- get_fci_wilson(x$Mean,
+                                  x$StdErr,
+                                  n,
+                                  conf_int = conf_int,
+                                  ...)
+        } else {
+            stop("Confidence interval method is not implemented.")
+        }
     }
 
     return(rst)
@@ -463,7 +473,7 @@ get_psci_km <- function(dta_psrst,
                      Method_ci = "wald",
                      Conf_type = conf_type,
                      Conf_int = conf_int,
-                     Conf_stderr = NA)
+                     Conf_stderr = NULL)
 
     ## by study type
     if (exists("Control", dta_psrst) && !is.null(dta_psrst$Control)) {

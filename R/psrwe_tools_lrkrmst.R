@@ -4,7 +4,6 @@
 #' @noRd
 #'
 get_ps_lrk_rmst <- function(dta_psbor,
-                            v_outcome     = NULL,
                             v_event       = NULL,
                             v_time        = NULL,
                             f_stratum     = get_surv_stratum_lrk,
@@ -22,9 +21,7 @@ get_ps_lrk_rmst <- function(dta_psbor,
     ## estimate
     eff_theta <- NULL
     for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data,
-                             strata[i],
-                             c(v_outcome, v_time, v_event))
+        cur_01  <- get_cur_d(data, strata[i], c(v_time, v_event))
 
         cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
         cur_d0  <- cur_01$cur_d0
@@ -58,7 +55,6 @@ get_ps_lrk_rmst <- function(dta_psbor,
 #' @noRd
 #'
 get_ps_lrk_rmst_sjk <- function(dta_psbor,
-                                v_outcome     = NULL,
                                 v_event       = NULL,
                                 v_time        = NULL,
                                 f_stratum     = get_surv_stratum_lrk,
@@ -70,7 +66,7 @@ get_ps_lrk_rmst_sjk <- function(dta_psbor,
     data    <- data[!is.na(data[["_strata_"]]), ]
 
     ## main estimates
-    rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
+    rst <- get_ps_lrk_rmst(dta_psbor,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
                            f_overall_est = f_overall_est,
@@ -85,7 +81,7 @@ get_ps_lrk_rmst_sjk <- function(dta_psbor,
     dta_psbor_jk <- dta_psbor
     for (i_jk in 1:n_jk) {
         dta_psbor_jk$data <- data[-i_jk,]
-        rst_jk <- get_ps_lrk_rmst(dta_psbor_jk, v_outcome = v_outcome,
+        rst_jk <- get_ps_lrk_rmst(dta_psbor_jk,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
                                   f_overall_est = f_overall_est,
@@ -111,7 +107,6 @@ get_ps_lrk_rmst_sjk <- function(dta_psbor,
 #' @noRd
 #'
 get_ps_lrk_rmst_cjk <- function(dta_psbor,
-                                v_outcome     = NULL,
                                 v_event       = NULL,
                                 v_time        = NULL,
                                 f_stratum     = get_surv_stratum_lrk,
@@ -127,7 +122,7 @@ get_ps_lrk_rmst_cjk <- function(dta_psbor,
     }
 
     ## main estimates
-    rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
+    rst <- get_ps_lrk_rmst(dta_psbor,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
                            f_overall_est = f_overall_est,
@@ -163,7 +158,7 @@ get_ps_lrk_rmst_cjk <- function(dta_psbor,
         }
 
         ## do the same as "sjk" method on the new "tmp_rst_jk".
-        rst_jk <- get_ps_lrk_rmst(tmp_rst_jk, v_outcome = v_outcome,
+        rst_jk <- get_ps_lrk_rmst(tmp_rst_jk,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
                                   f_overall_est = f_overall_est,
@@ -190,7 +185,6 @@ get_ps_lrk_rmst_cjk <- function(dta_psbor,
 #' @noRd
 #'
 get_ps_lrk_rmst_sbs <- function(dta_psbor,
-                                v_outcome     = NULL,
                                 v_event       = NULL,
                                 v_time        = NULL,
                                 f_stratum     = get_surv_stratum_lrk,
@@ -203,7 +197,7 @@ get_ps_lrk_rmst_sbs <- function(dta_psbor,
     data    <- data[!is.na(data[["_strata_"]]), ]
 
     ## main estimates
-    rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
+    rst <- get_ps_lrk_rmst(dta_psbor,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
                            f_overall_est = f_overall_est,
@@ -236,7 +230,7 @@ get_ps_lrk_rmst_sbs <- function(dta_psbor,
         }
         dta_psbor_bs$data <- tmp_data
 
-        rst_bs <- get_ps_lrk_rmst(dta_psbor_bs, v_outcome = v_outcome,
+        rst_bs <- get_ps_lrk_rmst(dta_psbor_bs,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
                                   f_overall_est = f_overall_est,
@@ -262,7 +256,6 @@ get_ps_lrk_rmst_sbs <- function(dta_psbor,
 #' @noRd
 #'
 get_ps_lrk_rmst_cbs <- function(dta_psbor,
-                                v_outcome     = NULL,
                                 v_event       = NULL,
                                 v_time        = NULL,
                                 f_stratum     = get_surv_stratum_lrk,
@@ -280,7 +273,7 @@ get_ps_lrk_rmst_cbs <- function(dta_psbor,
     }
 
     ## main estimates
-    rst <- get_ps_lrk_rmst(dta_psbor, v_outcome = v_outcome,
+    rst <- get_ps_lrk_rmst(dta_psbor,
                            v_event = v_event, v_time = v_time,
                            f_stratum = f_stratum,
                            f_overall_est = f_overall_est,
@@ -329,7 +322,7 @@ get_ps_lrk_rmst_cbs <- function(dta_psbor,
         }
 
         ## do the same as "sbs" method on the new "tmp_rst_bs".
-        rst_bs <- get_ps_lrk_rmst(tmp_rst_bs, v_outcome = v_outcome,
+        rst_bs <- get_ps_lrk_rmst(tmp_rst_bs,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,
                                   f_overall_est = f_overall_est,
