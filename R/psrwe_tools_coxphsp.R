@@ -1,14 +1,14 @@
 #' Get estimates for Cox proportional hazard between two arms
-#' for RCT augmenting control (stratified approach)
+#' for RCT augmenting control (same proportion approach)
 #'
 #' @noRd
 #'
-get_ps_coxphst <- function(dta_psbor,
+get_ps_coxphsp <- function(dta_psbor,
                            v_outcome     = NULL,
                            v_event       = NULL,
                            v_time        = NULL,
                            f_stratum     = NULL,
-                           f_overall_est = get_overall_est_coxphst,
+                           f_overall_est = get_overall_est_coxphsp,
                            ...) {
 
     ## prepare data
@@ -33,7 +33,7 @@ get_ps_coxphst <- function(dta_psbor,
     }
 
     ## effect with borrowing
-    cur_effect   <- get_surv_coxphst(cur_d1, cur_d0, cur_d1t,
+    cur_effect   <- get_surv_coxphsp(cur_d1, cur_d0, cur_d1t,
                                      n_borrow = borrow, ...)
 
     ## summary
@@ -49,14 +49,14 @@ get_ps_coxphst <- function(dta_psbor,
     return(rst)
 }
 
-#' Summarize overall theta for coxph (stratified approach)
+#' Summarize overall theta for coxph (same proportion approach)
 #'
 #'
 #' @noRd
 #'
-get_overall_est_coxphst <- function(ts1) {
+get_overall_est_coxphsp <- function(ts1) {
     o_est <- data.frame(Mean   = ts1[, 1],
-                        StdErr = ts1[, 2]
+                        StdErr = ts1[, 2],
                         T      = ts1[, 3])
 
     list(Stratum_Estimate = NULL,

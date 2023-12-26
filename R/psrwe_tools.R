@@ -23,7 +23,7 @@ get_rwe_class <- function(c_str) {
          inverse_distance = "one minus the inverse of the distance in PS distributions",
          ANAMETHOD = c("ps_pp", "ps_cl",
                        "ps_km", "ps_lrk", "ps_rmst",
-                       "ps_coxphwa", "ps_coxphst"),
+                       "ps_coxphwa", "ps_coxphsp"),
          ANAMETHOD_KM = c("ps_km", "ps_lrk", "ps_rmst")
          )
 }

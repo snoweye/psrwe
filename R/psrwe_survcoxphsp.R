@@ -1,8 +1,8 @@
 #' PS-integrated Cox proportional hazard method for
-#' comparing time-to-event outcomes (stratified approach)
+#' comparing time-to-event outcomes (same proportion approach)
 #'
 #' Cox proportional hazard (coxph) method evaluates two-arm RCT via
-#' PS-integrated method (stratified approach).
+#' PS-integrated method (same proportion approach).
 #' Variance can be estimated by Jackknife methods.
 #' Apply to the case when there is only one external data source and
 #' two-arm RCT.
@@ -33,7 +33,7 @@
 #'     via \code{survival::coxph()}.
 #'
 #' @return A data frame with class name \code{PSRWE_RST_TESTANA}.
-#'     It contains the test statistics of each stratum as well as the
+#'     It contains the test statistics as well as the
 #'     Jackknife estimation. The results can be further
 #'     summarized by its S3 method \code{summary}.
 #'     The results can be also analyzed by \code{psrwe_outana} for outcome
@@ -49,14 +49,14 @@
 #'                         ps_method = "logistic", nstrata = 5,
 #'                         stra_ctl_only = FALSE)
 #' ps_bor_rct <- psrwe_borrow(dta_ps_rct, total_borrow = 30)
-#' rst_coxphst <- psrwe_survcoxphst(ps_bor_rct,
+#' rst_coxphsp <- psrwe_survcoxphsp(ps_bor_rct,
 #'                                  v_time = "Y_Surv",
 #'                                  v_event = "Status")
-#' rst_coxphst
+#' rst_coxphsp
 #'
 #' @export
 #'
-psrwe_survcoxphst <- function(dta_psbor,
+psrwe_survcoxphsp <- function(dta_psbor,
                               v_time        = "time",
                               v_event       = "event",
                               stderr_method = c("naive", "sjk", "cjk",
@@ -83,24 +83,24 @@ psrwe_survcoxphst <- function(dta_psbor,
 
     ## call estimation
     if (stderr_method[1] %in% c("naive")) {
-        rst <- get_ps_coxphst(dta_psbor,
+        rst <- get_ps_coxphsp(dta_psbor,
                               v_event = v_event, v_time = v_time,
                               stderr_method = stderr_method[1],
                               ...)
     } else if(stderr_method[1] == "sjk") {
-        rst <- get_ps_coxphst_sjk(dta_psbor,
+        rst <- get_ps_coxphsp_sjk(dta_psbor,
                                   v_event = v_event, v_time = v_time,
                                   ...)
     } else if(stderr_method[1] == "cjk") {
-        rst <- get_ps_coxphst_cjk(dta_psbor,
+        rst <- get_ps_coxphsp_cjk(dta_psbor,
                                   v_event = v_event, v_time = v_time,
                                   ...)
     } else if(stderr_method[1] == "sbs") {
-        rst <- get_ps_coxphst_sbs(dta_psbor,
+        rst <- get_ps_coxphsp_sbs(dta_psbor,
                                   v_event = v_event, v_time = v_time,
                                   ...)
     } else if(stderr_method[1] == "cbs") {
-        rst <- get_ps_coxphst_cbs(dta_psbor,
+        rst <- get_ps_coxphsp_cbs(dta_psbor,
                                   v_event = v_event, v_time = v_time,
                                   ...)
     } else {
@@ -110,18 +110,18 @@ psrwe_survcoxphst <- function(dta_psbor,
     ## return
     rst$Observed <- rst_obs
     rst$stderr_method <- stderr_method
-    rst$Method   <- "ps_coxphst"
+    rst$Method   <- "ps_coxphsp"
     rst$Outcome_type <- "tte"
     class(rst)   <- get_rwe_class("ANARST")
     return(rst)
 }
 
-#' Get coxph estimation for each stratum (weighted average approach)
+#' Get coxph estimation for each stratum (same proportion approach)
 #'
 #'
 #' @noRd
 #'
-get_surv_coxphst <- function(d1, d0 = NULL, d1t, n_borrow = 0,
+get_surv_coxphsp <- function(d1, d0 = NULL, d1t, n_borrow = 0,
                              ...) {
 
     ## treatment or control only
@@ -143,7 +143,7 @@ get_surv_coxphst <- function(d1, d0 = NULL, d1t, n_borrow = 0,
     return(overall)
 }
 
-#' The coxph estimation (stratified approach)
+#' The coxph estimation (same proportion approach)
 #'
 #' Estimate overall coxph estimate with all strata together
 #'
@@ -162,7 +162,7 @@ get_surv_coxphst <- function(d1, d0 = NULL, d1t, n_borrow = 0,
 #'
 #' @export
 #'
-rwe_coxphst <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
+rwe_coxphsp <- function(dta_cur, dta_ext, dta_cur_trt, n_borrow = 0,
                         stderr_method = "naive") {
 
     ## current control and external control if available
