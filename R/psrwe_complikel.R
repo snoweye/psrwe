@@ -60,10 +60,11 @@ psrwe_compl <- function(dta_psbor, v_outcome = "Y",
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
     ## call estimation
-    rst <- get_ps_clkmfcn(dta_psbor, v_outcome = v_outcome,
-                          outcome_type = outcome_type[1],
-                          f_stratum = get_cl_stratum,
-                          f_ps_clkmfcn = get_ps_cl_km,
+    rst <- get_ps_clkmfcn(dta_psbor,
+                          v_outcome     = v_outcome,
+                          outcome_type  = outcome_type[1],
+                          f_stratum     = get_cl_stratum,
+                          f_ps_clkmfcn  = get_ps_cl_km,
                           stderr_method = stderr_method[1],
                           ...)
 
