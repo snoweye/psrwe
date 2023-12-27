@@ -76,40 +76,13 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
     rst_obs <- get_km_observed(data, v_time, v_event, all_tps)
 
     ## call estimation
-    if (stderr_method[1] %in% c("naive", "jk", "none")) {
-        rst <- get_ps_cl_km(dta_psbor,
-                            v_event = v_event, v_time = v_time,
-                            f_stratum = get_surv_stratum,
-                            pred_tp = all_tps,
-                            stderr_method = stderr_method[1],
-                            ...)
-    } else if (stderr_method[1] %in% c("sjk")) {
-        rst <- get_ps_cl_km_sjk(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                f_stratum = get_surv_stratum,
-                                pred_tp = all_tps,
-                                ...)
-    } else if (stderr_method[1] %in% c("cjk")) {
-        rst <- get_ps_cl_km_cjk(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                f_stratum = get_surv_stratum,
-                                pred_tp = all_tps,
-                                ...)
-    } else if (stderr_method[1] %in% c("sbs")) {
-        rst <- get_ps_cl_km_sbs(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                f_stratum = get_surv_stratum,
-                                pred_tp = all_tps,
-                                ...)
-    } else if (stderr_method[1] %in% c("cbs")) {
-        rst <- get_ps_cl_km_cbs(dta_psbor,
-                                v_event = v_event, v_time = v_time,
-                                f_stratum = get_surv_stratum,
-                                pred_tp = all_tps,
-                                ...)
-    } else {
-        stop("stderr_err method is not implemented.")
-    }
+    rst <- get_ps_clkmfcn(dta_psbor,
+                          v_event = v_event, v_time = v_time,
+                          f_stratum = get_surv_stratum,
+                          f_ps_clkmfcn = get_ps_cl_km,
+                          pred_tp = all_tps,
+                          stderr_method = stderr_method[1],
+                          ...)
 
     ## return
     rst$Observed <- rst_obs

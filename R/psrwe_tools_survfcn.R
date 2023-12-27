@@ -11,9 +11,16 @@ get_ps_survfcn <- function(dta_psbor,
                            f_stratum     = get_surv_stratum_lrk,
                            f_overall_est = get_overall_est_wostderr,
                            f_ps_survfcn  = get_ps_lrk_rmst,
-                           stderr_method = c("sjk", "cjk", "sbs", "cbs"), 
+                           stderr_method = c("naive", "jk", "sjk", "cjk",
+                                             "sbs", "cbs", "none"), 
                            ...) {
-    if (stderr_method[1] == "sjk") {
+    if (stderr_method[1] %in% c("naive", "jk", "none")) {
+        rst <- f_ps_survfcn(dta_psbor,
+                            v_event = v_event, v_time = v_time,
+                            f_stratum = f_stratum,
+                            stderr_method = stderr_method[1],
+                            ...)
+    } else if (stderr_method[1] == "sjk") {
         rst <- get_ps_survfcn_sjk(dta_psbor,
                                   v_event = v_event, v_time = v_time,
                                   f_stratum = f_stratum,

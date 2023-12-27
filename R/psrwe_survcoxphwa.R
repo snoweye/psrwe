@@ -76,30 +76,23 @@ psrwe_survcoxphwa <- function(dta_psbor,
 
     ## all time points
     data    <- dta_psbor$data
+    pred_tp <- max(data[, v_time])
 
     ## observed (no need so skip)
     # rst_obs <- get_coxph_observed(data, v_time, v_event)
     rst_obs <- NULL
 
     ## call estimation
-    if (stderr_method[1] %in% c("naive", "jk", "none")) {
-        rst <- get_ps_coxphwa(dta_psbor,
-                              v_event = v_event, v_time = v_time,
-                              stderr_method = stderr_method[1],
-                              ...)
-    } else if (stderr_method[1] %in% c("sjk", "cjk", "sbs", "cbs")) {
-        rst <- get_ps_survfcn(dta_psbor,
-                              v_event = v_event, v_time = v_time,
-                              f_stratum = get_surv_stratum_coxphwa,
-                              f_ps_survfcn = get_ps_coxphwa,
-                              stderr_method = stderr_method[1],
-                              ...)
-    } else {
-        stop("stderr_method is not implemented.")
-    }
+    rst <- get_ps_survfcn(dta_psbor,
+                          v_event = v_event, v_time = v_time,
+                          f_stratum = get_surv_stratum_coxphwa,
+                          f_ps_survfcn = get_ps_coxphwa,
+                          stderr_method = stderr_method[1],
+                          ...)
 
     ## return
     rst$Observed <- rst_obs
+    rst$pred_tp  <- pred_tp
     rst$stderr_method <- stderr_method
     rst$Method   <- "ps_coxphwa"
     rst$Outcome_type <- "tte"
