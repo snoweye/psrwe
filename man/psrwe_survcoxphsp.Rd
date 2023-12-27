@@ -9,7 +9,7 @@ psrwe_survcoxphsp(
   dta_psbor,
   v_time = "time",
   v_event = "event",
-  stderr_method = c("naive", "jk", "sjk", "cjk", "sbs", "cbs"),
+  stderr_method = c("naive", "sjk", "cjk", "sbs", "cbs"),
   ...
 )
 }
@@ -44,7 +44,7 @@ two-arm RCT.
 \code{stderr_method} includes \code{naive} as default which
     mostly follows the calculation provided by
     \code{survival::coxph(..., robust = TRUE)}, and
-    \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
+    \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
     \code{none}. See \code{\link{stderr_method}} for details.
 
     Naive approach calculates log hazard ratio by each stratum, then

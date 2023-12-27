@@ -1,7 +1,7 @@
 #' Options for estimating stderr method
 #'
-#' Estimating the stderr may have several options which also depending on
-#' outcome type and analysis methods.
+#' Estimating the stderr may have several options which also depend on
+#' outcome type and analysis method.
 #'
 #' @section \code{stderr_method} options:
 #'     \code{jk} is mostly the default for continuous and binary outcomes.

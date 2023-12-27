@@ -5,8 +5,8 @@
 \alias{stderr_method}
 \title{Options for estimating stderr method}
 \description{
-Estimating the stderr may have several options which also depending on
-outcome type and analysis methods.
+Estimating the stderr may have several options which also depend on
+outcome type and analysis method.
 }
 \section{\code{stderr_method} options}{
 
