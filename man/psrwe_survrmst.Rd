@@ -39,23 +39,13 @@ A data frame with class name \code{PSRWE_RST_TESTANA}.
 }
 \description{
 RMST test evaluates two-arm RCT for up to a given time point.
-Variance can be estimated by Jackknife methods.
 Apply to the case when there is only one external data source and
 two-arm RCT.
 }
 \details{
-\code{stderr_method} includes \code{naive} as default which
-    mostly follows Greenwood formula,
-    \code{jk} using Jackknife method within each stratum,
-    \code{sjk} using simple Jackknife method for combined estimates
-    such as point estimates in single arm or treatment effects in RCT, or
-    \code{cjk} for complex Jackknife method including refitting PS model,
-    matching, trimming, calculating borrowing parameters, and
-    combining overall estimates.
-    Note that \code{sjk} may take a while longer to finish and
-    \code{cjk} will take even much longer to finish.
-    The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
-    methods (\code{n_bootstrap = 200} as default).
+\code{stderr_method} includes \code{naive} (default),
+    \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
+    \code{none}. See \code{\link{stderr_method}} for details.
 }
 \examples{
 data(ex_dta_rct)

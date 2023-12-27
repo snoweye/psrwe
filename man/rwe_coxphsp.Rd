@@ -4,13 +4,7 @@
 \alias{rwe_coxphsp}
 \title{The coxph estimation (same proportion approach)}
 \usage{
-rwe_coxphsp(
-  dta_cur,
-  dta_ext,
-  dta_cur_trt,
-  n_borrow = 0,
-  stderr_method = "naive"
-)
+rwe_coxphsp(dta_cur, dta_ext, dta_cur_trt, n_borrow, stderr_method = "naive")
 }
 \arguments{
 \item{dta_cur}{Matrix of time and event from a PS stratum in current study
@@ -30,5 +24,6 @@ study (treatment arm only)}
 Estimation of overall coxph estimate
 }
 \description{
-Estimate overall coxph estimate with all strata together
+Estimate overall coxph estimate with all strata together.
+A single/same proportion is estimated.
 }

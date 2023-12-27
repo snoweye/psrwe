@@ -15,7 +15,7 @@
 #'
 #' @details \code{stderr_method} includes \code{naive} (default),
 #'     \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
-#'     \code{none}. See \code{psrwe_tools_stderr} for details.
+#'     \code{none}. See \code{\link{stderr_method}} for details.
 #'
 #' @return A data frame with class name \code{PSRWE_RST}. It contains the
 #'     composite estimation of the mean for each stratum as well as the

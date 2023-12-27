@@ -17,7 +17,7 @@
 #'     mostly follows the calculation provided by
 #'     \code{survival::coxph(..., robust = TRUE)}, and
 #'     \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
-#'     \code{none}. See \code{psrwe_tools_stderr} for details.
+#'     \code{none}. See \code{\link{stderr_method}} for details.
 #'
 #'     Naive approach calculates log hazard ratio by each stratum, then
 #'     takes weighted average of all stratum-specific estimates as other
