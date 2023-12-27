@@ -33,6 +33,14 @@ oa_coxphwa_rct
 print(oa_coxphwa_rct, show_rct = TRUE)
 summary(oa_coxphwa_rct)
 
+### Use Jackknife stderr. This may take a while.
+rst_coxphwa_rct_jk <- psrwe_survcoxphwa(ps_bor_rct,
+                                        v_time = "Y_Surv",
+                                        v_event = "Status",
+                                        stderr_method = "jk")
+oa_coxphwa_rct_jk <- psrwe_outana(rst_coxphwa_rct_jk, alternative = "less")
+summary(oa_coxphwa_rct_jk)
+
 ### Use simple Jackknife stderr. This may take a while.
 rst_coxphwa_rct_sjk <- psrwe_survcoxphwa(ps_bor_rct,
                                          v_time = "Y_Surv",

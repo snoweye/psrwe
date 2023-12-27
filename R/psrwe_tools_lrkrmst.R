@@ -19,9 +19,10 @@ get_ps_lrk_rmst <- function(dta_psbor,
     borrow  <- dta_psbor$Borrow$N_Borrow
 
     ## estimate
+    v_covs <- c(v_time, v_event)
     eff_theta <- NULL
     for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data, strata[i], c(v_time, v_event))
+        cur_01  <- get_cur_d(data, strata[i], v_covs)
 
         cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
         cur_d0  <- cur_01$cur_d0

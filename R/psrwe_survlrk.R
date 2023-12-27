@@ -89,32 +89,16 @@ psrwe_survlrk <- function(dta_psbor, pred_tp,
                                pred_tps = all_tps,
                                stderr_method = stderr_method[1],
                                ...)
-    } else if (stderr_method[1] %in% c("sjk")) {
-        rst <- get_ps_lrk_rmst_sjk(dta_psbor,
-                                   v_event = v_event, v_time = v_time,
-                                   f_stratum = get_surv_stratum_lrk,
-                                   pred_tps = all_tps,
-                                   ...)
-    } else if (stderr_method[1] %in% c("cjk")) {
-        rst <- get_ps_lrk_rmst_cjk(dta_psbor,
-                                   v_event = v_event, v_time = v_time,
-                                   f_stratum = get_surv_stratum_lrk,
-                                   pred_tp = all_tps,
-                                   ...)
-    } else if (stderr_method[1] %in% c("sbs")) {
-        rst <- get_ps_lrk_rmst_sbs(dta_psbor,
-                                   v_event = v_event, v_time = v_time,
-                                   f_stratum = get_surv_stratum_lrk,
-                                   pred_tps = all_tps,
-                                   ...)
-    } else if (stderr_method[1] %in% c("cbs")) {
-        rst <- get_ps_lrk_rmst_cbs(dta_psbor,
-                                   v_event = v_event, v_time = v_time,
-                                   f_stratum = get_surv_stratum_lrk,
-                                   pred_tp = all_tps,
-                                   ...)
+    } else if (stderr_method[1] %in% c("sjk", "cjk", "sbs", "cbs")) {
+        rst <- get_ps_survfcn(dta_psbor,
+                              v_event = v_event, v_time = v_time,
+                              f_stratum = get_surv_stratum_lrk,
+                              f_ps_survfcn = get_ps_lrk_rmst,
+                              pred_tps = all_tps,
+                              stderr_method = stderr_method[1],
+                              ...)
     } else {
-        stop("stderr_errmethod is not implemented.")
+        stop("stderr_method is not implemented.")
     }
 
     ## return

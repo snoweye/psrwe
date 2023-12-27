@@ -108,7 +108,7 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
                                 pred_tp = all_tps,
                                 ...)
     } else {
-        stop("stderr_errmethod is not implemented.")
+        stop("stderr_err method is not implemented.")
     }
 
     ## return

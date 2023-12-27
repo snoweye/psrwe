@@ -87,28 +87,15 @@ psrwe_survcoxphwa <- function(dta_psbor,
                               v_event = v_event, v_time = v_time,
                               stderr_method = stderr_method[1],
                               ...)
-    } else if (stderr_method[1] %in% c("sjk")) {
-        rst <- get_ps_coxphwa_sjk(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  stderr_method = stderr_method[1],
-                                  ...)
-    } else if (stderr_method[1] %in% c("cjk")) {
-        rst <- get_ps_coxphwa_cjk(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  stderr_method = stderr_method[1],
-                                  ...)
-    } else if (stderr_method[1] %in% c("sbs")) {
-        rst <- get_ps_coxphwa_sbs(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  stderr_method = stderr_method[1],
-                                  ...)
-    } else if (stderr_method[1] %in% c("cbs")) {
-        rst <- get_ps_coxphwa_cbs(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  stderr_method = stderr_method[1],
-                                  ...)
+    } else if (stderr_method[1] %in% c("sjk", "cjk", "sbs", "cbs")) {
+        rst <- get_ps_survfcn(dta_psbor,
+                              v_event = v_event, v_time = v_time,
+                              f_stratum = get_surv_stratum_coxphwa,
+                              f_ps_survfcn = get_ps_coxphwa,
+                              stderr_method = stderr_method[1],
+                              ...)
     } else {
-        stop("stderr_errmethod is not implemented.")
+        stop("stderr_method is not implemented.")
     }
 
     ## return
@@ -117,55 +104,6 @@ psrwe_survcoxphwa <- function(dta_psbor,
     rst$Method   <- "ps_coxphwa"
     rst$Outcome_type <- "tte"
     class(rst)   <- get_rwe_class("ANARST")
-    return(rst)
-}
-
-#' Get estimates for Cox proportional hazard between two arms
-#' for RCT augmenting control (weighted average approach)
-#'
-#' @noRd
-#'
-get_ps_coxphwa <- function(dta_psbor,
-                           v_event       = NULL,
-                           v_time        = NULL,
-                           f_stratum     = get_surv_stratum_coxphwa,
-                           f_overall_est = get_overall_est,
-                           ...) {
-
-    ## prepare data
-    data    <- dta_psbor$data
-    data    <- data[!is.na(data[["_strata_"]]), ]
-
-    strata  <- levels(data[["_strata_"]])
-    nstrata <- length(strata)
-    borrow  <- dta_psbor$Borrow$N_Borrow
-
-    ## estimate
-    v_covs <- c(v_time, v_event, "_arm_")
-    eff_theta <- NULL
-    for (i in seq_len(nstrata)) {
-        cur_01  <- get_cur_d(data, strata[i], v_covs)
-
-        cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
-        cur_d0  <- cur_01$cur_d0
-        cur_d1t <- cur_01$cur_d1t
-
-        ## effect with borrowing
-        cur_effect   <- f_stratum(cur_d1, cur_d0, cur_d1t,
-                                  n_borrow = borrow[i], ...)
-        eff_theta <- rbind(eff_theta, cur_effect)
-    }
-
-    ## summary
-    rst_effect <- f_overall_est(eff_theta, dta_psbor$Borrow$N_Current)
-
-    ## return
-    rst <-  list(Control   = NULL,
-                 Treatment = NULL,
-                 Effect    = rst_effect,
-                 Borrow    = dta_psbor$Borrow,
-                 Total_borrow = dta_psbor$Total_borrow,
-                 is_rct       = dta_psbor$is_rct)
     return(rst)
 }
 
@@ -227,6 +165,55 @@ get_surv_stratum_coxphwa <- function(d1, d0 = NULL, d1t, n_borrow = 0,
     }
 
     return(overall)
+}
+
+#' Get estimates for Cox proportional hazard between two arms
+#' for RCT augmenting control (weighted average approach)
+#'
+#' @noRd
+#'
+get_ps_coxphwa <- function(dta_psbor,
+                           v_event       = NULL,
+                           v_time        = NULL,
+                           f_stratum     = get_surv_stratum_coxphwa,
+                           f_overall_est = get_overall_est,
+                           ...) {
+
+    ## prepare data
+    data    <- dta_psbor$data
+    data    <- data[!is.na(data[["_strata_"]]), ]
+
+    strata  <- levels(data[["_strata_"]])
+    nstrata <- length(strata)
+    borrow  <- dta_psbor$Borrow$N_Borrow
+
+    ## estimate
+    v_covs <- c(v_time, v_event, "_arm_")
+    eff_theta <- NULL
+    for (i in seq_len(nstrata)) {
+        cur_01  <- get_cur_d(data, strata[i], v_covs)
+
+        cur_d1  <- cur_01$cur_d1    ## This is "cur_d1c"
+        cur_d0  <- cur_01$cur_d0
+        cur_d1t <- cur_01$cur_d1t
+
+        ## effect with borrowing
+        cur_effect   <- f_stratum(cur_d1, cur_d0, cur_d1t,
+                                  n_borrow = borrow[i], ...)
+        eff_theta <- rbind(eff_theta, cur_effect)
+    }
+
+    ## summary
+    rst_effect <- f_overall_est(eff_theta, dta_psbor$Borrow$N_Current)
+
+    ## return
+    rst <-  list(Control   = NULL,
+                 Treatment = NULL,
+                 Effect    = rst_effect,
+                 Borrow    = dta_psbor$Borrow,
+                 Total_borrow = dta_psbor$Total_borrow,
+                 is_rct       = dta_psbor$is_rct)
+    return(rst)
 }
 
 #' The coxph estimation (weighted average approach)
