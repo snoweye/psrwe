@@ -77,7 +77,8 @@ psrwe_survcoxphwa <- function(dta_psbor,
     rst <- get_ps_survfcn(dta_psbor,
                           v_event       = v_event,
                           v_time        = v_time,
-                          f_stratum     = get_surv_stratum_coxphwa,
+                          f_stratum     = get_surv_stratum_coxphwa, # alter default
+                          f_overall_est = get_overall_est,          # alter default
                           f_ps_survfcn  = get_ps_coxphwa,
                           stderr_method = stderr_method[1],
                           ...)

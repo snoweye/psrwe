@@ -70,7 +70,7 @@ psrwe_survkm <- function(dta_psbor, pred_tp,
     rst <- get_ps_clkmfcn(dta_psbor,
                           v_event       = v_event,
                           v_time        = v_time,
-                          f_stratum     = get_surv_stratum,
+                          f_stratum     = get_surv_stratum, # alter default
                           f_ps_clkmfcn  = get_ps_cl_km,
                           pred_tp       = all_tps,
                           stderr_method = stderr_method[1],

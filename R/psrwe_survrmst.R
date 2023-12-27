@@ -76,7 +76,7 @@ psrwe_survrmst <- function(dta_psbor, pred_tp,
     rst <- get_ps_survfcn(dta_psbor,
                           v_event       = v_event,
                           v_time        = v_time,
-                          f_stratum     = get_surv_stratum_rmst,
+                          f_stratum     = get_surv_stratum_rmst, # alter default
                           f_ps_survfcn  = get_ps_lrk_rmst,
                           pred_tps      = all_tps,
                           stderr_method = stderr_method[1],

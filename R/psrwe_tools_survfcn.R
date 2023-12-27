@@ -90,10 +90,6 @@ get_ps_survfcn_sjk <- function(dta_psbor,
 
     n_jk <- nrow(data)
     dta_psbor_jk <- dta_psbor
-rst_coxphwa_rct_jk <- psrwe_survcoxphwa(ps_bor_rct,
-                                        v_time = "Y_Surv",
-                                        v_event = "Status",
-                                        stderr_method = "naive")
     for (i_jk in 1:n_jk) {
         dta_psbor_jk$data <- data[-i_jk,]
         rst_jk <- f_ps_survfcn(dta_psbor_jk,
@@ -224,7 +220,6 @@ get_ps_survfcn_sbs <- function(dta_psbor,
     ## bootstrap overall stderr
     rst_om <- rst$Effect$Overall_Estimate$Mean
     sdf_om <- rep(0, length(rst_om))
-
 
     ## get id by unique stratum
     ustrata <- unique(data[, c("_grp_", "_arm_", "_strata_")])

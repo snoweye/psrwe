@@ -17,7 +17,7 @@
 #' @details \code{stderr_method} includes \code{naive} as default which
 #'     mostly follows the calculation provided by
 #'     \code{survival::coxph(..., robust = TRUE)}, and
-#'     \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
+#'     \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
 #'     \code{none}. See \code{\link{stderr_method}} for details.
 #'
 #'     Naive approach calculates log hazard ratio by each stratum, then
@@ -58,7 +58,7 @@
 psrwe_survcoxphsp <- function(dta_psbor,
                               v_time        = "time",
                               v_event       = "event",
-                              stderr_method = c("naive", "jk", "sjk", "cjk",
+                              stderr_method = c("naive", "sjk", "cjk",
                                                 "sbs", "cbs"), 
                               ...) {
 
@@ -81,30 +81,14 @@ psrwe_survcoxphsp <- function(dta_psbor,
     rst_obs <- NULL
 
     ## call estimation
-    if (stderr_method[1] %in% c("naive")) {
-        rst <- get_ps_coxphsp(dta_psbor,
-                              v_event = v_event, v_time = v_time,
-                              stderr_method = stderr_method[1],
-                              ...)
-    } else if(stderr_method[1] == "sjk") {
-        rst <- get_ps_coxphsp_sjk(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  ...)
-    } else if(stderr_method[1] == "cjk") {
-        rst <- get_ps_coxphsp_cjk(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  ...)
-    } else if(stderr_method[1] == "sbs") {
-        rst <- get_ps_coxphsp_sbs(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  ...)
-    } else if(stderr_method[1] == "cbs") {
-        rst <- get_ps_coxphsp_cbs(dta_psbor,
-                                  v_event = v_event, v_time = v_time,
-                                  ...)
-    } else {
-        stop("stderr_errmethod is not implemented.")
-    }
+    rst <- get_ps_survfcn(dta_psbor,
+                          v_event       = v_event,
+                          v_time        = v_time,
+                          f_stratum     = NULL,         # alter default
+                          f_overall_est = rwe_coxphsp,  # alter default
+                          f_ps_survfcn  = get_ps_coxphsp,
+                          stderr_method = stderr_method[1],
+                          ...)
 
     ## return
     rst$Observed <- rst_obs
@@ -123,7 +107,7 @@ psrwe_survcoxphsp <- function(dta_psbor,
 get_ps_coxphsp <- function(dta_psbor,
                            v_event       = NULL,
                            v_time        = NULL,
-                           f_stratum     = get_surv_stratum_coxphwa,
+                           f_stratum     = NULL,
                            f_overall_est = rwe_coxphsp,
                            ...) {
 
@@ -156,11 +140,15 @@ get_ps_coxphsp <- function(dta_psbor,
 
         ## for overall coxphsp
         sp_d1  <- rbind(sp_d1, cur_d1)
-        sp_d0  <- rbind(sp_d0, cur_d0)
         sp_d1t <- rbind(sp_d1t, cur_d1t)
-        ns0           <- nrow(cur_d0)
-        sp_d0_weights <- c(sp_d0_weights,
-                           rep(borrow[i] / ns0, ns0))
+        if (borrow[i] > 0) {
+            ns0    <- nrow(cur_d0)
+            if (ns0 > 0) {
+                sp_d0  <- rbind(sp_d0, cur_d0)
+                sp_d0_weights <- c(sp_d0_weights,
+                                   rep(borrow[i] / ns0, ns0))
+            }
+        }
     }
 
     ## summary
