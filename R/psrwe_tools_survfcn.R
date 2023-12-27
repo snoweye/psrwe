@@ -2,6 +2,7 @@
 
 #' Get overall variance for surv function estimations between two arms
 #' for RCT augmenting control
+#' including ps_lrk, ps_rmst, and ps_coxphwa.
 #'
 #' @noRd
 #'

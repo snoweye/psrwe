@@ -1,6 +1,7 @@
 ## Estimating overall variance for PSCL and PSKM estimations
 
-#' Get overall variance for PSCL and PSKM estimations
+#' Get overall variance for CL and KM estimations
+#' including single arm, RCT, ps_cl and ps_km.
 #'
 #' @noRd
 #'
