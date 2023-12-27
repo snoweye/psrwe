@@ -60,35 +60,12 @@ psrwe_compl <- function(dta_psbor, v_outcome = "Y",
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
     ## call estimation
-    if (stderr_method[1] %in% c("jk", "none")) {
-        rst <- get_ps_cl_km(dta_psbor, v_outcome = v_outcome,
-                            outcome_type = outcome_type,
-                            f_stratum = get_cl_stratum,
-                            stderr_method = stderr_method[1],
-                            ...)
-    } else if (stderr_method[1] %in% c("sjk")) {
-        rst <- get_ps_cl_km_sjk(dta_psbor, v_outcome = v_outcome,
-                                outcome_type = outcome_type,
-                                f_stratum = get_cl_stratum,
-                                ...)
-    } else if (stderr_method[1] %in% c("cjk")) {
-        rst <- get_ps_cl_km_cjk(dta_psbor, v_outcome = v_outcome,
-                                outcome_type = outcome_type,
-                                f_stratum = get_cl_stratum,
-                                ...)
-    } else if (stderr_method[1] %in% c("sbs")) {
-        rst <- get_ps_cl_km_sbs(dta_psbor, v_outcome = v_outcome,
-                                outcome_type = outcome_type,
-                                f_stratum = get_cl_stratum,
-                                ...)
-    } else if (stderr_method[1] %in% c("cbs")) {
-        rst <- get_ps_cl_km_cbs(dta_psbor, v_outcome = v_outcome,
-                                outcome_type = outcome_type,
-                                f_stratum = get_cl_stratum,
-                                ...)
-    } else {
-        stop("stderr_errmethod is not implemented.")
-    }
+    rst <- get_ps_clkmfcn(dta_psbor, v_outcome = v_outcome,
+                          outcome_type = outcome_type[1],
+                          f_stratum = get_cl_stratum,
+                          f_ps_clkmfcn = get_ps_cl_km,
+                          stderr_method = stderr_method[1],
+                          ...)
 
     ## return
     rst$Observed <- rst_obs
