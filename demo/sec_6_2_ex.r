@@ -1,4 +1,4 @@
-### Example of Section 6.1.
+### Example of Section 6.2.
 suppressMessages(library(psrwe, quietly = TRUE))
 options(digits = 3)
 data(ex_dta_rct)
@@ -22,29 +22,21 @@ dta_ps_rct <- psrwe_est(ex_dta_rct,
 ps_bor_rct <- psrwe_borrow(dta_ps_rct, total_borrow = 30)
 
 ### PSCOXPHWA, two-arm RCT, time-to-event outcome, coxph weighted average.
-rst_coxphwa_rct <- psrwe_survcoxphwa(ps_bor_rct,
+rst_coxphsp_rct <- psrwe_survcoxphsp(ps_bor_rct,
                                      v_time = "Y_Surv",
                                      v_event = "Status")
-rst_coxphwa_rct
+rst_coxphsp_rct
 
 ### Outcome analysis.
-oa_coxphwa_rct <- psrwe_outana(rst_coxphwa_rct, alternative = "less")
-oa_coxphwa_rct
-summary(oa_coxphwa_rct)
-
-### Use Jackknife stderr. This may take a while.
-rst_coxphwa_rct_jk <- psrwe_survcoxphwa(ps_bor_rct,
-                                        v_time = "Y_Surv",
-                                        v_event = "Status",
-                                        stderr_method = "jk")
-oa_coxphwa_rct_jk <- psrwe_outana(rst_coxphwa_rct_jk, alternative = "less")
-summary(oa_coxphwa_rct_jk)
+oa_coxphsp_rct <- psrwe_outana(rst_coxphsp_rct, alternative = "less")
+oa_coxphsp_rct
+summary(oa_coxphsp_rct)
 
 ### Use simple Jackknife stderr. This may take a while.
-rst_coxphwa_rct_sjk <- psrwe_survcoxphwa(ps_bor_rct,
+rst_coxphsp_rct_sjk <- psrwe_survcoxphsp(ps_bor_rct,
                                          v_time = "Y_Surv",
                                          v_event = "Status",
                                          stderr_method = "sjk")
-oa_coxphwa_rct_sjk <- psrwe_outana(rst_coxphwa_rct_sjk, alternative = "less")
-summary(oa_coxphwa_rct_sjk)
+oa_coxphsp_rct_sjk <- psrwe_outana(rst_coxphsp_rct_sjk, alternative = "less")
+summary(oa_coxphsp_rct_sjk)
 

@@ -3,7 +3,6 @@
 #'
 #' Cox proportional hazard (coxph) method evaluates two-arm RCT via
 #' PS-integrated method (weighted average approach).
-#' Variance can be estimated by Jackknife methods.
 #' Apply to the case when there is only one external data source and
 #' two-arm RCT.
 #'
@@ -17,16 +16,8 @@
 #' @details \code{stderr_method} includes \code{naive} as default which
 #'     mostly follows the calculation provided by
 #'     \code{survival::coxph(..., robust = TRUE)}, and
-#'     \code{jk} using Jackknife method within each stratum,
-#'     \code{sjk} using simple Jackknife method for combined estimates
-#'     such as point estimates in single arm or treatment effects in RCT, or
-#'     \code{cjk} for complex Jackknife method including refitting PS model,
-#'     matching, trimming, calculating borrowing parameters, and
-#'     combining overall estimates.
-#'     Note that \code{sjk} may take a while longer to finish and
-#'     \code{cjk} will take even much longer to finish.
-#'     The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
-#'     methods (\code{n_bootstrap = 200} as default).
+#'     \code{jk}, \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
+#'     \code{none}. See \code{psrwe_tools_stderr} for details.
 #'
 #'     Naive approach calculates log hazard ratio by each stratum, then
 #'     takes weighted average of all stratum-specific estimates as other

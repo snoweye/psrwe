@@ -2,25 +2,16 @@
 #'
 #' Estimate the mean of the outcome based on PS-integrated composite likelihood
 #' approach with weights of ATT (WATT).
-#' Variance is estimated by Jack-Knife method. Applies to the case
-#' when there is only one external data source.
+#' Applies to the case when there is only one external data source.
 #'
 #' @inheritParams psrwe_powerp
 #'
 #' @param stderr_method Method for computing StdErr, see Details
 #' @param ... Parameters for \code{rwe_cl_watt}
 #'
-#' @details \code{stderr_method} include \code{jk} as default
-#'     using Jackknife method within each stratum,
-#'     \code{sjk} for simple Jackknife method for combined estimates
-#'     such as point estimates in single arm or treatment effects in RCT, or
-#'     \code{cjk} for complex Jackknife method including refitting PS model,
-#'     matching, trimming, calculating borrowing parameters, and
-#'     combining overall estimates.
-#'     Note that \code{sjk} may take a while longer to finish and
-#'     \code{cjk} will take even much longer to finish.
-#'     The \code{sbs} and \code{cbs} are for simple and complex Bootstrap
-#'     methods (\code{n_bootstrap = 200} as default).
+#' @details \code{stderr_method} includes \code{jk} (default),
+#'     \code{sjk}, \code{cjk}, \code{sbs}, \code{cbs}, and
+#'     \code{none}. See \code{psrwe_tools_stderr} for details.
 #'
 #' @return A data frame with class name \code{PSRWE_RST}. It contains the
 #'     composite estimation of the mean for each stratum as well as the

@@ -167,44 +167,50 @@ get_psinfer_freq <- function(dta_psrst,
 
     ## by method_pval, study type, and outcome type
     if (method_pval %in% c("score", "score_weighted")) {
-      if (is_rct || outcome_type != "binary") {
-        stop("socre pval is only for binary outcomes and single arm study.")
-      } else {
-        N_borrow <- dta_psrst$Borrow$N_Borrow
-        N_current <- dta_psrst$Borrow$N_Current
-        N_nominal <- N_current + N_borrow
-
-        rst_psinfer[[type]]$Stratum_InferProb <-
-            get_fpval_binary_score(dta_psrst[[type]]$Stratum_Estimate,
-                                   alternative = alternative,
-                                   mu = mu,
-                                   n_nominal = N_nominal)
-
-        if (method_pval == "score") {
-          rst_psinfer[[type]]$Overall_InferProb <-
-              get_fpval_binary_score(dta_psrst[[type]]$Overall_Estimate,
-                                     alternative = alternative,
-                                     mu = mu,
-                                     n_nominal = sum(N_nominal))
+        if (is_rct || outcome_type != "binary") {
+            stop("socre pval is only for binary outcomes and single arm study.")
         } else {
-          rst_psinfer[[type]]$Overall_InferProb <-
-              get_fpval_binary_score_weighted(
-                  dta_psrst[[type]]$Overall_Estimate,
-                  alternative = alternative,
-                  mu = mu,
-                  n_nominal = N_nominal,
-                  weights = N_current)
+            N_borrow <- dta_psrst$Borrow$N_Borrow
+            N_current <- dta_psrst$Borrow$N_Current
+            N_nominal <- N_current + N_borrow
+
+            rst_psinfer[[type]]$Stratum_InferProb <- NULL
+            if (!is.null(dta_psrst[[type]]$Stratum_Estimate)) {
+                rst_psinfer[[type]]$Stratum_InferProb <-
+                    get_fpval_binary_score(dta_psrst[[type]]$Stratum_Estimate,
+                                           alternative = alternative,
+                                           mu = mu,
+                                           n_nominal = N_nominal)
+            }
+
+            if (method_pval == "score") {
+                rst_psinfer[[type]]$Overall_InferProb <-
+                    get_fpval_binary_score(dta_psrst[[type]]$Overall_Estimate,
+                                           alternative = alternative,
+                                           mu = mu,
+                                           n_nominal = sum(N_nominal))
+            } else {
+                rst_psinfer[[type]]$Overall_InferProb <-
+                    get_fpval_binary_score_weighted(
+                        dta_psrst[[type]]$Overall_Estimate,
+                        alternative = alternative,
+                        mu = mu,
+                        n_nominal = N_nominal,
+                        weights = N_current)
+            }
         }
-      }
     } else {
-      rst_psinfer[[type]]$Stratum_InferProb <-
-          get_fpval(dta_psrst[[type]]$Stratum_Estimate,
-                    alternative = alternative,
-                    mu = mu)
-      rst_psinfer[[type]]$Overall_InferProb <-
-          get_fpval(dta_psrst[[type]]$Overall_Estimate,
-                    alternative = alternative,
-                    mu = mu)
+        rst_psinfer[[type]]$Stratum_InferProb <- NULL
+        if (!is.null(dta_psrst[[type]]$Stratum_Estimate)) {
+            rst_psinfer[[type]]$Stratum_InferProb <-
+                get_fpval(dta_psrst[[type]]$Stratum_Estimate,
+                          alternative = alternative,
+                          mu = mu)
+        }
+        rst_psinfer[[type]]$Overall_InferProb <-
+            get_fpval(dta_psrst[[type]]$Overall_Estimate,
+                      alternative = alternative,
+                      mu = mu)
     }
 
     return(rst_psinfer)

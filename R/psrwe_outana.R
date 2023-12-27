@@ -124,15 +124,23 @@ psrwe_outana <- function(dta_psrst,
                          rep(0, nrow(dta_psrst[[type]]$Overall_Estimate))),
                        levels = c(1:nrow(dta_psrst$Borrow), 0),
                        labels = c(dta_psrst$Borrow$Stratum, "Overall"))
-    } else if (dta_psrst$Method %in% c("ps_coxphsp")) {
-        stop("TBD")
-    } else {
-        ## i.e., ps_pp and ps_cl, and ps_coxphwa
+    } else if (dta_psrst$Method %in% c("ps_pp", "ps_cl", "ps_coxphwa")) {
+        ## i.e., ps_pp, ps_cl, and ps_coxphwa
         id_s <- factor(c(1:nrow(dta_psrst$Borrow), 0),
                        levels = c(1:nrow(dta_psrst$Borrow), 0),
                        labels = c(dta_psrst$Borrow$Stratum, "Overall"))
+    } else {
+        ## i.e., ps_coxphsp
+        id_s <- factor(c(0),
+                       levels = c(0),
+                       labels = c("Overall"))
     }
-    dtype <- rbind(dta_psrst[[type]]$Stratum_Estimate[, col_est],
+
+    dtype <- NULL
+    if (!is.null(dta_psrst[[type]]$Stratum_Estimate)) {
+        dtype <- dta_psrst[[type]]$Stratum_Estimate[, col_est]
+    }
+    dtype <- rbind(dtype,
                    dta_psrst[[type]]$Overall_Estimate[, col_est])
     rst_est <- data.frame(Stratum = id_s)
     rst_est <- cbind(rst_est, dtype)
@@ -141,14 +149,22 @@ psrwe_outana <- function(dta_psrst,
 
     if (is_rct) {
         if (exists("Treatment", dta_psrst) && !is.null(dta_psrst$Treatment)) {
-            dtype <- rbind(dta_psrst$Treatment$Stratum_Estimate[, col_est],
+            dtype <- NULL
+            if (!is.null(dta_psrst$Treatment$Stratum_Estimate)) {
+                dtype <- dta_psrst$Treatment$Stratum_Estimate[, col_est]
+            }
+            dtype <- rbind(dtype,
                            dta_psrst$Treatment$Overall_Estimate[, col_est])
             rst_est_trt <- data.frame(Stratum = id_s)
             rst_est_trt <- cbind(rst_est_trt, dtype)
         }
 
         if (exists("Control", dta_psrst) && !is.null(dta_psrst$Control)) {
-            dtype <- rbind(dta_psrst$Control$Stratum_Estimate[, col_est],
+            dtype <- NULL
+            if (!is.null(dta_psrst$Control$Stratum_Estimate)) {
+                dtype <- dta_psrst$Control$Stratum_Estimate[, col_est]
+            }
+            dtype <- rbind(dtype,
                            dta_psrst$Control$Overall_Estimate[, col_est])
             rst_est_ctl <- data.frame(Stratum = id_s)
             rst_est_ctl <- cbind(rst_est_ctl, dtype)
@@ -156,27 +172,44 @@ psrwe_outana <- function(dta_psrst,
     }
 
     ## summary CI results
-    dtype <- rbind(dta_psrst$CI[[type]]$Stratum_Estimate,
+    dtype <- NULL
+    if (!is.null(dta_psrst$CI[[type]]$Stratum_Estimate)) {
+        dtype <- dta_psrst$CI[[type]]$Stratum_Estimate
+    }
+    dtype <- rbind(dtype,
                    dta_psrst$CI[[type]]$Overall_Estimate)
     rst_est <- cbind(rst_est, dtype)
 
     if (is_rct) {
         if (exists("Treatment", dta_psrst) && !is.null(dta_psrst$Treatment)) {
-            dtype <- rbind(dta_psrst$CI$Treatment$Stratum_Estimate,
+            dtype <- NULL
+            if (!is.null(dta_psrst$CI$Treatment$Stratum_Estimate)) {
+                dtype <- dta_psrst$CI$Treatment$Stratum_Estimate
+            }
+            dtype <- rbind(dtype,
                            dta_psrst$CI$Treatment$Overall_Estimate)
             rst_est_trt <- cbind(rst_est_trt, dtype)
         }
 
         if (exists("Control", dta_psrst) && !is.null(dta_psrst$Control)) {
-            dtype <- rbind(dta_psrst$CI$Control$Stratum_Estimate,
+            dtype <- NULL
+            if (!is.null(dta_psrst$CI$Control$Stratum_Estimate)) {
+                dtype <- dta_psrst$CI$Control$Stratum_Estimate
+            }
+            dtype <- rbind(dtype,
                            dta_psrst$CI$Control$Overall_Estimate)
             rst_est_ctl <- cbind(rst_est_ctl, dtype)
         }
     }
 
-    ## summary INFR results
-    dtype <- rbind(dta_psrst$INFER[[type]]$Stratum_InferProb,
+    ## summary INFER results
+    dtype <- NULL
+    if (!is.null(dta_psrst$INFER[[type]]$Stratum_InferProb)) {
+        dtype <- dta_psrst$INFER[[type]]$Stratum_InferProb
+    }
+    dtype <- rbind(dtype,
                    dta_psrst$INFER[[type]]$Overall_InferProb)
+
     if (dta_psrst$Method == "ps_pp") {
         colnames(dtype) <- "PostPr"
     } else {
@@ -467,10 +500,12 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     id_Overall_T <- dta_psrst[[type]]$Overall_Estimate$T %in% org_pred_tps
     for (i_type in types_est) {
         if (!is.null(dta_psrst[[i_type]])) {
-            dta_psrst[[i_type]]$Stratum_Estimate <-
-                subset_replace(dta_psrst[[i_type]]$Stratum_Estimate,
-                               id_Stratum_T,
-                               time_table)
+            if (!is.null(dta_psrst[[i_type]]$Stratum_Estimate)) {
+                dta_psrst[[i_type]]$Stratum_Estimate <-
+                    subset_replace(dta_psrst[[i_type]]$Stratum_Estimate,
+                                   id_Stratum_T,
+                                   time_table)
+            }
 
             dta_psrst[[i_type]]$Overall_Estimate <-
                 subset_replace(dta_psrst[[i_type]]$Overall_Estimate,
@@ -482,10 +517,12 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     ## subset CI
     for (i_type in types_est) {
         if (!is.null(dta_psrst$CI[[i_type]])) {
-            dta_psrst$CI[[i_type]]$Stratum_Estimate <-
-                subset_replace(dta_psrst$CI[[i_type]]$Stratum_Estimate,
-                               id_Stratum_T,
-                               time_table)
+            if (!is.null(dta_psrst$CI[[i_type]]$Stratum_Estimate)) {
+                dta_psrst$CI[[i_type]]$Stratum_Estimate <-
+                    subset_replace(dta_psrst$CI[[i_type]]$Stratum_Estimate,
+                                   id_Stratum_T,
+                                   time_table)
+            }
 
             dta_psrst$CI[[i_type]]$Overall_Estimate <-
                 subset_replace(dta_psrst$CI[[i_type]]$Overall_Estimate,
@@ -497,10 +534,12 @@ get_psrst_km_subset <- function(dta_psrst, pred_tps = NULL) {
     ## subset INFR
     for (i_type in types_est) {
         if (!is.null(dta_psrst$INFR[[i_type]])) {
-            dta_psrst$INFR[[i_type]]$Stratum_Estimate <-
-                subset_replace(dta_psrst$INFR[[i_type]]$Stratum_Estimate,
-                               id_Stratum_T,
-                               time_table)
+            if (!is.null(dta_psrst$INFR[[i_type]]$Stratum_Estimate)) {
+                dta_psrst$INFR[[i_type]]$Stratum_Estimate <-
+                    subset_replace(dta_psrst$INFR[[i_type]]$Stratum_Estimate,
+                                   id_Stratum_T,
+                                   time_table)
+            }
 
             dta_psrst$INFR[[i_type]]$Overall_Estimate <-
                 subset_replace(dta_psrst$INFR[[i_type]]$Overall_Estimate,
