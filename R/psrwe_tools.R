@@ -862,6 +862,7 @@ plot_km_rst <- function(x,
                         add_stratum = FALSE,
                         km_lwd = 1,
                         km_ci_lwd = 1,
+                        color_manual_color = NULL,
                         ...) {
 
     ## check args
@@ -946,12 +947,22 @@ plot_km_rst <- function(x,
         theme_bw()
 
     if (add_ci) {
-      rst_plt <- rst_plt +
-          geom_step(aes(x = T, y = Lower, col = Arm),
-                        size = km_ci_lwd, linetype = 3) +
-          geom_step(aes(x = T, y = Upper, col = Arm),
-                        size = km_ci_lwd, linetype = 3)
+        rst_plt <- rst_plt +
+            geom_step(aes(x = T, y = Lower, col = Arm),
+                          size = km_ci_lwd, linetype = 3) +
+            geom_step(aes(x = T, y = Upper, col = Arm),
+                          size = km_ci_lwd, linetype = 3)
     }
+
+    ## change color
+    if (is.null(color_manual_color)) {
+        # palette("ggplot2") 
+        # color_manual_color <- palette() 
+        color_manual_color <- c("black", "#F8766D", "#00BA38", "#619CFF",
+                                "#00BFC4", "#F564E3", "#B79F00", "gray62")
+    }
+    rst_plt <- rst_plt +
+        scale_color_manual(values = color_manual_color)
 
     rst_plt
 }
