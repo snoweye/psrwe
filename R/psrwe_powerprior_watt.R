@@ -443,7 +443,8 @@ rwe_ana_con <- function(lst_data,
 #'
 #' @noRd
 #'
-get_stan_data_wattcon <- function(dta_psbor, v_outcome) {
+get_stan_data_wattcon <- function(dta_psbor, v_outcome,
+                                  ipw_method = "Heng.Li") {
     is_rct  <- dta_psbor$is_rct
     data    <- dta_psbor$data
     data    <- data[!is.na(data[["_strata_"]]), ]
