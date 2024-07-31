@@ -196,8 +196,9 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
 get_stan_data_watt <- function(dta_psbor, v_outcome,
                                tau0_method = "Wang2019",
                                ipw_method = "Heng.Li") {
-    f_curd <- function(i, d1, d0 = NULL, d0_watt = NULL,
-                       tau0_method = "Wang2019") {
+    f_curd <- function(i, d1, d0 = NULL, d0_e = NULL,
+                       tau0_method = "Wang2019",
+                       ipw_method = "Heng.Li") {
         cur_d <- c(N1    = length(d1),
                    YBAR1 = mean(d1),
                    YSUM1 = sum(d1))
@@ -208,8 +209,10 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
                        YBAR0 = 0,
                        SD0   = 0)
         } else {
-            if (is.null(d0_watt)) {
+            if (is.null(d0_e)) {
                 d0_watt <- rep(1, length(d0))
+            } else {
+                d0_watt <- d0_e / (1 - d0_e)
             }
 
             if (tau0_method[1] == "Wang2019") {
@@ -226,9 +229,18 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
                 stop("The tau0_method is not implemented.")
             }
 
+            ### overwrite watt for ipw_method of Xi.Ada.Wang
+            if (ipw_method[1] == "Heng.Li") {
+                YBAR0 <- sum(d0 * d0_watt) / sum(d0_watt)
+            else if (ipw_method[1] == "Xi.Ada.Wang") {
+                YBAR0 <- sum(d0 * d0_watt * d0_e) / sum(d0_watt)
+            } else {
+                stop("The ipw_method is not implemented.")
+            }
+
             cur_d <- c(cur_d,
                        N0    = length(d0),
-                       YBAR0 = sum(d0 * d0_watt) / sum(d0_watt),
+                       YBAR0 = YBAR0,
                        SD0   = SD0)
         }
 
@@ -260,15 +272,10 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
 
         cur_01_e    <- get_cur_d(data, strata[i], "_ps_")
         cur_d0_e    <- cur_01_e$cur_d0
-        cur_d0_watt <- cur_d0_e / (1 - cur_d0_e)
 
-        ### overwrite watt for ipw_method of Xi.Ada.Wang
-        if (ipw_method[1] == "Xi.Ada.Wang") {
-            cur_d0_watt <- cur_d0_e * cur_d0_watt
-        }
-
-        ctl_cur    <- f_curd(i, cur_d1, cur_d0, cur_d0_watt,
-                             tau0_method = tau0_method[1])
+        ctl_cur    <- f_curd(i, cur_d1, cur_d0, cur_d0_e,
+                             tau0_method = tau0_method[1],
+                             ipw_method = ipw_method[1])
         ctl_stan_d <- rbind(ctl_stan_d, ctl_cur$stan_d)
         ctl_y1     <- c(ctl_y1,   ctl_cur$y1)
         ctl_inx1   <- c(ctl_inx1, ctl_cur$inx1)
