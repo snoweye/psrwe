@@ -232,7 +232,7 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
             ### overwrite watt for ipw_method of Xi.Ada.Wang
             if (ipw_method[1] == "Heng.Li") {
                 YBAR0 <- sum(d0 * d0_watt) / sum(d0_watt)
-            else if (ipw_method[1] == "Xi.Ada.Wang") {
+            } else if (ipw_method[1] == "Xi.Ada.Wang") {
                 YBAR0 <- sum(d0 * d0_watt * d0_e) / sum(d0_watt)
             } else {
                 stop("The ipw_method is not implemented.")
