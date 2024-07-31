@@ -348,8 +348,8 @@ rwe_ana <- function(lst_data, outcome_type, ...) {
 #'
 rwe_ana_bin <- function(lst_data,
                         n_resample = 4000,
-                        beta_a_init = 0.01,
-                        beta_b_init = 0.01,
+                        beta_a_init = 1.0,
+                        beta_b_init = 1.0,
                         ...) {
     ns <- lst_data$S
     if (lst_data$N0 > 0) {
