@@ -119,6 +119,8 @@ NULL
 #'   \item{Group}{current, rwd}
 #'   \item{Arm}{control, treatment}
 #'   \item{Y_Con}{Continuous outcome}
+#'   \item{Y_Surv}{Survival outcome in days}
+#'   \item{Status}{Event status (0=alive, 1=dead)}
 #'   \item{V1}{Baseline covariate}
 #'   \item{V2}{Baseline covariate}
 #'   \item{V3}{Baseline covariate}
