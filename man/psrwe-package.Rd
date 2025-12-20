@@ -68,11 +68,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Chenguang Wang \email{chenguang.wang.0517@gmail.com}
+\strong{Maintainer}: Wei-Chen Chen \email{wccsnow@gmail.com}
 
 Authors:
 \itemize{
-  \item Wei-Chen Chen
+  \item Chenguang Wang
 }
 
 Other contributors:
