@@ -4,12 +4,13 @@ Version: 3.2
 Authors@R: c(
     person(given = "Chenguang", family = "Wang",
            email = "chenguang.wang.0517@gmail.com",
-           role = c("aut", "cre")),
+           role = c("aut")),
     person(given = "Trustees of Columbia University",
            role = "cph",
            comment = "tools/make_cpp.R, R/stanmodels.R"),
     person(given = "Wei-Chen", family = "Chen",
-           role = c("aut")))
+           email = "wccsnow@gmail.com",
+           role = c("aut", "cre")))
 Description: High-quality real-world data can be transformed into scientific
     real-world evidence (RWE) for regulatory and healthcare decision-making
     using proven analytical methods and techniques. For example, propensity
@@ -42,9 +43,4 @@ SystemRequirements: GNU make
 NeedsCompilation: yes
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
-Packaged: 2025-12-10 19:55:43 UTC; snoweye
-Author: Chenguang Wang [aut, cre],
-  Trustees of Columbia University [cph] (tools/make_cpp.R,
-    R/stanmodels.R),
-  Wei-Chen Chen [aut]
 Maintainer: Chenguang Wang <chenguang.wang.0517@gmail.com>
