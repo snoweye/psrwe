@@ -3,7 +3,6 @@ Title: PS-Integrated Methods for Incorporating RWE in Clinical Studies
 Version: 3.2
 Authors@R: c(
     person(given = "Chenguang", family = "Wang",
-           email = "chenguang.wang.0517@gmail.com",
            role = c("aut")),
     person(given = "Trustees of Columbia University",
            role = "cph",
@@ -43,4 +42,4 @@ SystemRequirements: GNU make
 NeedsCompilation: yes
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
-Maintainer: Chenguang Wang <chenguang.wang.0517@gmail.com>
+Maintainer: Wei-Chen Chen <wccsnow@gmail.com>
