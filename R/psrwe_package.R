@@ -1,6 +1,8 @@
 #' PS-Integrated Methods for Incorporating RWE in Clinical Studies
 #'
-#' @docType   package
+#' @keywords internal
+"_PACKAGE"
+## @docType   package
 #' @name      psrwe-package
 #' @aliases   psrwe
 #' @useDynLib psrwe, .registration = TRUE
@@ -11,6 +13,7 @@
 #' @import rstantools
 #' @importFrom stats approxfun as.formula binomial cov density ecdf glm
 #'     integrate optim predict quantile sd var ks.test qnorm pnorm
+#'     rbeta rnorm
 #' @importFrom rstan sampling extract stanc rstan_options traceplot stan_rhat
 #' @importFrom randomForest randomForest
 #' @importFrom grDevices colors
@@ -90,7 +93,13 @@ NULL
 #'   \item{Y_Con}{Continuous outcome}
 #'   \item{Y_Surv}{Survival outcome in days}
 #'   \item{Status}{Event status (0=alive, 1=dead)}
-#'   \item{V1-V7}{Covariates}
+#'   \item{V1}{Baseline covariate}
+#'   \item{V2}{Baseline covariate}
+#'   \item{V3}{Baseline covariate}
+#'   \item{V4}{Baseline covariate}
+#'   \item{V5}{Baseline covariate}
+#'   \item{V6}{Baseline covariate}
+#'   \item{V7}{Baseline covariate}
 #' }
 "ex_dta"
 
@@ -110,6 +119,14 @@ NULL
 #'   \item{Group}{current, rwd}
 #'   \item{Arm}{control, treatment}
 #'   \item{Y_Con}{Continuous outcome}
-#'   \item{V1-V7}{Covariates}
+#'   \item{Y_Surv}{Survival outcome in days}
+#'   \item{Status}{Event status (0=alive, 1=dead)}
+#'   \item{V1}{Baseline covariate}
+#'   \item{V2}{Baseline covariate}
+#'   \item{V3}{Baseline covariate}
+#'   \item{V4}{Baseline covariate}
+#'   \item{V5}{Baseline covariate}
+#'   \item{V6}{Baseline covariate}
+#'   \item{V7}{Baseline covariate}
 #' }
 "ex_dta_rct"

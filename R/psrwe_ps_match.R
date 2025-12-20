@@ -122,7 +122,7 @@ psrwe_match <- function(dta_ps, ratio = 3, strata_covs  = NULL,
 
     ## result
     rst             <- dta_ps
-    rst$data_match  <- as.data.frame(data)
+    rst$data        <- as.data.frame(data)
     rst$nstrata     <- nstrata
     rst$ratio       <- ratio
     rst$caliper     <- caliper
@@ -190,7 +190,7 @@ summary.PSRWE_DTA_MAT <- function(object, ...) {
     # }
 
     ## check matching ratio
-    match_n   <- object$data_match %>%
+    match_n   <- object$data       %>%
         dplyr::filter(1 == `_grp_` &
                       0 == `_arm_`) %>%
         select(`_matchn_`)
