@@ -2,13 +2,14 @@
 
 ## Main changes
 
-* Added IPW and ATT methods.
+* Added IPW and ATT weighting for Bayesian methods.
 * Added bootstrap and jackknife methods for estimating stderr.
-* Added survival methods (KM, log-rank, and RMST) for single-arm and two-arm studies.
-* Added PS matching.
+* Added PS-integrated survival methods (KM, log-rank, and RMST).
+* Added PS-integrated matching.
 * Added examples in demo.
 * Fixed summary and print S3 methods.
 * Fixed linking with rstan and stan including code and header.
+* Reworked documents and vignettes.
 
 
 # psrwe 1.3.9999
