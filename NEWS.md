@@ -1,3 +1,16 @@
+# psrwe 3.1 and 3.2
+
+## Main changes
+
+* Added IPW and ATT methods.
+* Added bootstrap and jackknife methods for estimating stderr.
+* Added survival methods (KM, log-rank, and RMST) for single-arm and two-arm studies.
+* Added PS matching.
+* Added examples in demo.
+* Fixed summary and print S3 methods.
+* Fixed linking with rstan and stan including code and header.
+
+
 # psrwe 1.3.9999
 
 ## Bug fixes

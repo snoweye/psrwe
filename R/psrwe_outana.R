@@ -199,7 +199,7 @@ psrwe_outana <- function(dta_psrst,
 
 #' @title Print outcome analysis results
 #'
-#' @description Print detail information of outcome analysis results
+#' @description Print detailed information of outcome analysis results
 #'
 #' @param x A list of class \code{PSRWE_RST_OUTANA} that is generated using the
 #'     \code{\link{psrwe_outana}} function.
