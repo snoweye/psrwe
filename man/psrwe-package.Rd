@@ -8,7 +8,7 @@
 \description{
 High-quality real-world data can be transformed into scientific real-world evidence (RWE) for regulatory and healthcare decision-making using proven analytical methods and techniques. For example, propensity score (PS) methodology can be applied to pre-select a subset of real-world data containing patients that are similar to those in the current clinical study in terms of covariates, and to stratify the selected patients together with those in the current study into more homogeneous strata. Then, methods such as the power prior approach or composite likelihood approach can be applied in each stratum to draw inference for the parameters of interest. This package provides functions that implement the PS-integrated RWE analysis methods proposed in Wang et al. (2019) \doi{10.1080/10543406.2019.1657133}, Wang et al. (2020) \doi{10.1080/10543406.2019.1684309} and Chen et al. (2020) \doi{10.1080/10543406.2020.1730877}.
 
-This package provide R functions for conducting clinical studies with
+This package provides R functions for conducting clinical studies with
 real-world evidence (RWE) incorporated in the study design and analysis.
 }
 \section{PS-integrated power prior}{
@@ -17,7 +17,7 @@ real-world evidence (RWE) incorporated in the study design and analysis.
 We extend the Bayesian power prior approach for a single-arm study (the
 current study) to leverage external real-world data (RWD). We use propensity
 score methodology to pre-select a subset of real-world data containing
-patients that are similar to those in the current study in terms of
+patients who are similar to those in the current study in terms of
 covariates, and to stratify the selected patients together with those in the
 current study into more homogeneous strata. The power prior approach is then
 applied in each stratum to obtain stratum-specific posterior distributions,
@@ -32,7 +32,7 @@ A propensity score-integrated composite likelihood (PSCL) approach is
 developed for cases in which the control arm of a two-arm randomized
 controlled trial (RCT) (treated vs. control) is augmented with patients from
 real-world data (RWD) containing both clinical outcomes and covariates at the
-patient-level. The PSCL approach first estimates the propensity score for
+patient level. The PSCL approach first estimates the propensity score for
 every patient as the probability of the patient being in the RCT rather than
 the RWD, and then stratifies all patients into strata based on the estimated
 propensity scores. Within each propensity score stratum, a composite

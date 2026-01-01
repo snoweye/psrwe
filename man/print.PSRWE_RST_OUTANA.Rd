@@ -19,5 +19,5 @@
 \item{...}{Additional parameters}
 }
 \description{
-Print detail information of outcome analysis results
+Print detailed information of outcome analysis results
 }
