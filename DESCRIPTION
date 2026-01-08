@@ -14,7 +14,7 @@ Authors@R: c(
 Description: High-quality real-world data can be transformed into scientific
     real-world evidence for regulatory and healthcare decision-making
     using proven analytical methods and techniques. For example, propensity
-    score (PS) methodology can be applied to preselect a subset of real-world
+    score (PS) methodology can be applied to select a subset of real-world
     data containing patients that are similar to those in the current clinical
     study in terms of covariates, and to stratify the selected patients together
     with those in the current study into more homogeneous strata. Then, methods
