@@ -397,6 +397,7 @@ summary.PSRWE_RST <- function(object, ...) {
 #'
 #' @method print PSRWE_RST
 #'
+#' @return None (invisible \code{NULL})
 #'
 #' @export
 #'
@@ -505,6 +506,7 @@ print.PSRWE_RST <- function(x, ...) {
 #'
 #' @method plot PSRWE_RST
 #'
+#' @return A plot of class in ggplot2
 #'
 #' @export
 #'

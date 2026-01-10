@@ -341,6 +341,7 @@ summary.PSRWE_DTA <- function(object,
 #'
 #' @method print PSRWE_DTA
 #'
+#' @return A list from \code{summary(x)} with additional information
 #'
 #' @export
 #'
@@ -381,6 +382,8 @@ print.PSRWE_DTA <- function(x, ...) {
 #' @param ... Additional parameter for the plot
 #'
 #' @method plot PSRWE_DTA
+#'
+#' @return A plot of class in ggplot2
 #'
 #' @export
 #'

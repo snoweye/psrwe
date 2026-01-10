@@ -217,6 +217,7 @@ summary.PSRWE_DTA_MAT <- function(object, ...) {
 #'
 #' @method print PSRWE_DTA_MAT
 #'
+#' @return A list from \code{summary(x)} with additional information
 #'
 #' @export
 #'
@@ -266,6 +267,8 @@ print.PSRWE_DTA_MAT <- function(x, ...) {
 #' @seealso  \code{\link{plot.PSRWE_DTA}}
 #'
 #' @method plot PSRWE_DTA_MAT
+#'
+#' @return A plot of class in ggplot2
 #'
 #' @export
 #'

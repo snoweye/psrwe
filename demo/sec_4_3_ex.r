@@ -1,6 +1,6 @@
 ### Example of Section 4.3.
 suppressMessages(library(psrwe, quietly = TRUE))
-options(digits = 3)
+org_options <- options(digits = 3)
 data(ex_dta)
 
 ### First parts of Data.
@@ -50,3 +50,7 @@ oa_cl
 }
 ### Unmark below to run if optmatch is available.
 # .remark_optmatch()
+
+### Reset to user's options.
+options(org_digits)
+
