@@ -12,7 +12,7 @@
 
 <meta name="author" content="Chenguang Wang" />
 
-<meta name="date" content="2025-12-31" />
+<meta name="date" content="2026-01-10" />
 
 <title>psrwe: Propensity Score-Integrated Methods for Incorporating Real-World Evidence in Clinical Studies</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">psrwe: Propensity Score-Integrated Methods
 for Incorporating Real-World Evidence in Clinical Studies</h1>
 <h4 class="author">Chenguang Wang</h4>
-<h4 class="date">2025-12-31</h4>
+<h4 class="date">2026-01-10</h4>
 
 
 
@@ -376,12 +376,12 @@ done by using the function <strong>psrwe_est</strong>.</p>
 ## each stratum, and the distance in PS distributions 
 ## calculated by overlapping area:
 ## 
-##     Stratum N_RWD N_Current Distance
-## 1 Stratum 1   729        40    0.561
-## 2 Stratum 2   156        40    0.720
-## 3 Stratum 3    78        40    0.804
-## 4 Stratum 4    50        40    0.810
-## 5 Stratum 5    13        40    0.795</code></pre>
+##     Stratum N_RWD N_Current  Distance
+## 1 Stratum 1   729        40 0.5608752
+## 2 Stratum 2   156        40 0.7201481
+## 3 Stratum 3    78        40 0.8035261
+## 4 Stratum 4    50        40 0.8097207
+## 5 Stratum 5    13        40 0.7952280</code></pre>
 <p>It is extremely important to evaluate the propensity score adjustment
 results. In <strong>psrwe</strong>, functions are provided to visualize
 the balance in covariate distributions and propensity score
@@ -417,12 +417,13 @@ of interest.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ps_bor <span class="ot">&lt;-</span> <span class="fu">psrwe_borrow</span>(dta_ps, <span class="at">total_borrow =</span> <span class="dv">40</span>,</span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>                        <span class="at">method =</span> <span class="st">&quot;distance&quot;</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>rst_pp <span class="ot">&lt;-</span> <span class="fu">psrwe_powerp</span>(ps_bor, <span class="at">v_outcome =</span> <span class="st">&quot;Y_Bin&quot;</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                        <span class="at">outcome_type =</span> <span class="st">&quot;binary&quot;</span>)</span></code></pre></div>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                        <span class="at">outcome_type =</span> <span class="st">&quot;binary&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                        <span class="at">seed =</span> <span class="dv">1234</span>)</span></code></pre></div>
 <pre><code>## 
 ## SAMPLING FOR MODEL &#39;powerpsbinary&#39; NOW (CHAIN 1).
 ## Chain 1: 
-## Chain 1: Gradient evaluation took 3.9e-05 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.39 seconds.
+## Chain 1: Gradient evaluation took 4.3e-05 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.43 seconds.
 ## Chain 1: Adjust your expectations accordingly!
 ## Chain 1: 
 ## Chain 1: 
@@ -439,15 +440,15 @@ of interest.</p>
 ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 1: 
-## Chain 1:  Elapsed Time: 0.148 seconds (Warm-up)
-## Chain 1:                0.101 seconds (Sampling)
-## Chain 1:                0.249 seconds (Total)
+## Chain 1:  Elapsed Time: 0.149 seconds (Warm-up)
+## Chain 1:                0.11 seconds (Sampling)
+## Chain 1:                0.259 seconds (Total)
 ## Chain 1: 
 ## 
 ## SAMPLING FOR MODEL &#39;powerpsbinary&#39; NOW (CHAIN 2).
 ## Chain 2: 
-## Chain 2: Gradient evaluation took 1.3e-05 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.
+## Chain 2: Gradient evaluation took 1.7e-05 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
 ## Chain 2: Adjust your expectations accordingly!
 ## Chain 2: 
 ## Chain 2: 
@@ -464,15 +465,15 @@ of interest.</p>
 ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 2: 
-## Chain 2:  Elapsed Time: 0.134 seconds (Warm-up)
-## Chain 2:                0.094 seconds (Sampling)
-## Chain 2:                0.228 seconds (Total)
+## Chain 2:  Elapsed Time: 0.145 seconds (Warm-up)
+## Chain 2:                0.106 seconds (Sampling)
+## Chain 2:                0.251 seconds (Total)
 ## Chain 2: 
 ## 
 ## SAMPLING FOR MODEL &#39;powerpsbinary&#39; NOW (CHAIN 3).
 ## Chain 3: 
-## Chain 3: Gradient evaluation took 1.4e-05 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+## Chain 3: Gradient evaluation took 1.6e-05 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
 ## Chain 3: Adjust your expectations accordingly!
 ## Chain 3: 
 ## Chain 3: 
@@ -489,15 +490,15 @@ of interest.</p>
 ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 3: 
-## Chain 3:  Elapsed Time: 0.136 seconds (Warm-up)
-## Chain 3:                0.098 seconds (Sampling)
-## Chain 3:                0.234 seconds (Total)
+## Chain 3:  Elapsed Time: 0.14 seconds (Warm-up)
+## Chain 3:                0.109 seconds (Sampling)
+## Chain 3:                0.249 seconds (Total)
 ## Chain 3: 
 ## 
 ## SAMPLING FOR MODEL &#39;powerpsbinary&#39; NOW (CHAIN 4).
 ## Chain 4: 
-## Chain 4: Gradient evaluation took 1.8e-05 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
+## Chain 4: Gradient evaluation took 1.6e-05 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
 ## Chain 4: Adjust your expectations accordingly!
 ## Chain 4: 
 ## Chain 4: 
@@ -514,15 +515,15 @@ of interest.</p>
 ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 4: 
-## Chain 4:  Elapsed Time: 0.139 seconds (Warm-up)
-## Chain 4:                0.096 seconds (Sampling)
-## Chain 4:                0.235 seconds (Total)
+## Chain 4:  Elapsed Time: 0.163 seconds (Warm-up)
+## Chain 4:                0.118 seconds (Sampling)
+## Chain 4:                0.281 seconds (Total)
 ## Chain 4:</code></pre>
 <p>Results can be further summarized as:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">summary</span>(rst_pp)</span></code></pre></div>
 <pre><code>## $Overall
-##         Type  Mean StdErr
-## Mean Control 0.313  0.028</code></pre>
+##         Type      Mean     StdErr
+## Mean Control 0.3134685 0.02878146</code></pre>
 </div>
 <div id="ps-integrated-composite-likelihood-approach-for-single-arm-studies" class="section level1">
 <h1>PS-integrated composite likelihood approach for single arm
@@ -540,8 +541,8 @@ estimate of the parameter of interest.</p>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>                       <span class="at">outcome_type =</span> <span class="st">&quot;binary&quot;</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">summary</span>(rst_cl)</span></code></pre></div>
 <pre><code>## $Overall
-##      Type  Mean StdErr
-## 1 Control 0.306 0.0279</code></pre>
+##      Type      Mean     StdErr
+## 1 Control 0.3057532 0.02786997</code></pre>
 </div>
 <div id="ps-integrated-composite-likelihood-approach-for-randomized-studies" class="section level1">
 <h1>PS-integrated composite likelihood approach for randomized
@@ -571,12 +572,12 @@ below.</p>
 ## each stratum, and the distance in PS distributions 
 ## calculated by overlapping area:
 ## 
-##     Stratum N_RWD N_RWD_CTL N_Current N_Cur_CTL N_Cur_TRT Distance
-## 1 Stratum 1   703       703        41        20        21    0.721
-## 2 Stratum 2   120       120        34        20        14    0.719
-## 3 Stratum 3    93        93        38        20        18    0.767
-## 4 Stratum 4    72        72        43        20        23    0.697
-## 5 Stratum 5    18        18        44        20        24    0.618</code></pre>
+##     Stratum N_RWD N_RWD_CTL N_Current N_Cur_CTL N_Cur_TRT  Distance
+## 1 Stratum 1   703       703        41        20        21 0.7205846
+## 2 Stratum 2   120       120        34        20        14 0.7190201
+## 3 Stratum 3    93        93        38        20        18 0.7666712
+## 4 Stratum 4    72        72        43        20        23 0.6971793
+## 5 Stratum 5    18        18        44        20        24 0.6175830</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>ps_bor_rct <span class="ot">&lt;-</span> <span class="fu">psrwe_borrow</span>(dta_ps_rct, <span class="at">total_borrow =</span> <span class="dv">30</span>,</span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>                            <span class="at">method =</span> <span class="st">&quot;distance&quot;</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>ps_bor_rct</span></code></pre></div>
@@ -586,33 +587,33 @@ below.</p>
 ## summarizes the number of subjects to be borrowed and the 
 ## weight parameter in each stratum:
 ## 
-##     Stratum N_RWD N_RWD_CTL N_RWD_TRT N_Current N_Cur_CTL N_Cur_TRT Distance
-## 1 Stratum 1   703       703         0        41        20        21    0.721
-## 2 Stratum 2   120       120         0        34        20        14    0.719
-## 3 Stratum 3    93        93         0        38        20        18    0.767
-## 4 Stratum 4    72        72         0        43        20        23    0.697
-## 5 Stratum 5    18        18         0        44        20        24    0.618
-##   Proportion N_Borrow   Alpha
-## 1      0.205     6.14 0.00873
-## 2      0.204     6.13 0.05105
-## 3      0.218     6.53 0.07024
-## 4      0.198     5.94 0.08250
-## 5      0.175     5.26 0.29233</code></pre>
+##     Stratum N_RWD N_RWD_CTL N_RWD_TRT N_Current N_Cur_CTL N_Cur_TRT  Distance
+## 1 Stratum 1   703       703         0        41        20        21 0.7205846
+## 2 Stratum 2   120       120         0        34        20        14 0.7190201
+## 3 Stratum 3    93        93         0        38        20        18 0.7666712
+## 4 Stratum 4    72        72         0        43        20        23 0.6971793
+## 5 Stratum 5    18        18         0        44        20        24 0.6175830
+##   Proportion N_Borrow       Alpha
+## 1  0.2046512 6.139535 0.008733336
+## 2  0.2042068 6.126205 0.051051710
+## 3  0.2177401 6.532203 0.070238741
+## 4  0.1980039 5.940117 0.082501625
+## 5  0.1753980 5.261940 0.292329972</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>rst_cl_rct <span class="ot">&lt;-</span> <span class="fu">psrwe_compl</span>(ps_bor_rct, <span class="at">v_outcome =</span> <span class="st">&quot;Y_Con&quot;</span>,</span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>                           <span class="at">outcome_type =</span> <span class="st">&quot;continuous&quot;</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>rst_cl_rct<span class="sc">$</span>Effect</span></code></pre></div>
 <pre><code>## $Stratum_Estimate
-##    Mean StdErr
-## 1 13.83  13.00
-## 2 -7.76  10.35
-## 3 15.81  15.20
-## 4 15.54   9.43
-## 5 12.63  11.73
+##        Mean    StdErr
+## 1 13.826269 13.003388
+## 2 -7.758159 10.346000
+## 3 15.811210 15.199217
+## 4 15.536261  9.432971
+## 5 12.630545 11.726722
 ## 
 ## $Overall_Estimate
-##   Mean StdErr
-## 1 10.6   5.41</code></pre>
+##       Mean   StdErr
+## 1 10.63864 5.413684</code></pre>
 </div>
 <div id="demo-examples" class="section level1">
 <h1>Demo examples</h1>

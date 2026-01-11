@@ -1,6 +1,6 @@
 ## ----eval=T, echo=FALSE-------------------------------------------------------
 suppressMessages(require(psrwe, quietly = TRUE))
-options(digits = 3)
+org_digits <- options(digits = 3)
 set.seed(1000)
 
 ## ----eval=T, echo=TRUE--------------------------------------------------------
@@ -66,4 +66,8 @@ print(oa_rmst, show_details = TRUE)
 
 ## ----eval=T, echo=TRUE--------------------------------------------------------
 summary(oa_rmst, pred_tps = c(180, 365))
+
+## ----eval=T, echo=FALSE-------------------------------------------------------
+## Reset to user's options.
+options(org_digits)
 
