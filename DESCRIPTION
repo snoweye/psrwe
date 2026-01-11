@@ -18,7 +18,7 @@ Description: High-quality real-world data can be transformed into scientific
     data containing patients that are similar to those in the current clinical
     study in terms of baseline covariates, and to stratify the selected
     patients together with those in the current study into more homogeneous
-    strata. Then, statisitcal methods such as the power prior approach or
+    strata. Then, statistical methods such as the power prior approach or
     composite likelihood approach can be applied in each stratum to draw
     inference for the parameters of interest. This package provides
     functions that implement the PS-integrated real-world 
