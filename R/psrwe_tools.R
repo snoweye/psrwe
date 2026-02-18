@@ -206,7 +206,8 @@ get_freq_tbl <- function(data, var_groupby, vars = NULL) {
       next
 
     cur_freq <- data %>%
-        count(.dots = c(var_groupby, v)) %>%
+        # count(.dots = c(var_groupby, v)) %>%
+        count(across(all_of(c(var_groupby, v)))) %>%
         group_by(!!as.name(var_groupby)) %>%
         mutate(Sum  = sum(.data$n),
                Freq = .data$n / sum(.data$n)) %>%

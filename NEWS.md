@@ -1,3 +1,7 @@
+# psrwe 3.3
+* Fixed CRAN error "processing vignette 'vignette.Rmd' failed" that `.dots` is defunct.
+  
+
 # psrwe 3.1 and 3.2
 
 ## Main changes
