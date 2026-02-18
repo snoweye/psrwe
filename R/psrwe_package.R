@@ -22,6 +22,7 @@
 #' @importFrom cowplot plot_grid
 #' @importFrom dplyr %>% group_by_ group_by summarize mutate count mutate_if
 #'     rename filter select arrange ungroup n distinct left_join if_else
+#'     across all_of
 #' @importFrom survival Surv survfit
 #'
 #' @description
