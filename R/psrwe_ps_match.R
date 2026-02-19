@@ -80,11 +80,11 @@ psrwe_match <- function(dta_ps, ratio = 3, strata_covs  = NULL,
     mat_method <- match.arg(method)
 
     ## save the seed from global if any then set random seed
-    old_seed <- NULL
+    # old_seed <- NULL
     if (!is.null(seed)) {
-        if (exists(".Random.seed", envir = .GlobalEnv)) {
-            old_seed <- get(".Random.seed", envir = .GlobalEnv)
-        }
+        # if (exists(".Random.seed", envir = .GlobalEnv)) {
+        #     old_seed <- get(".Random.seed", envir = .GlobalEnv)
+        # }
         set.seed(seed)
     }
 
@@ -112,13 +112,13 @@ psrwe_match <- function(dta_ps, ratio = 3, strata_covs  = NULL,
 
     ## reset the orignal seed back to the global or
     ## remove the one set within this session earlier.
-    if (!is.null(seed)) {
-        if (!is.null(old_seed)) {
-            invisible(assign(".Random.seed", old_seed, envir = .GlobalEnv))
-        } else {
-            invisible(rm(list = c(".Random.seed"), envir = .GlobalEnv))
-        }
-    }
+    # if (!is.null(seed)) {
+    #     if (!is.null(old_seed)) {
+    #         invisible(assign(".Random.seed", old_seed, envir = .GlobalEnv))
+    #     } else {
+    #         invisible(rm(list = c(".Random.seed"), envir = .GlobalEnv))
+    #     }
+    # }
 
     ## result
     rst             <- dta_ps
@@ -217,6 +217,7 @@ summary.PSRWE_DTA_MAT <- function(object, ...) {
 #'
 #' @method print PSRWE_DTA_MAT
 #'
+#' @return A list from \code{summary(x)} with additional information
 #'
 #' @export
 #'
@@ -266,6 +267,8 @@ print.PSRWE_DTA_MAT <- function(x, ...) {
 #' @seealso  \code{\link{plot.PSRWE_DTA}}
 #'
 #' @method plot PSRWE_DTA_MAT
+#'
+#' @return A plot of class in ggplot2
 #'
 #' @export
 #'

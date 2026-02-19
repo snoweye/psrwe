@@ -22,7 +22,8 @@ plot(dta_ps, plot_type = "ps")
 ps_bor <- psrwe_borrow(dta_ps, total_borrow = 40,
                         method = "distance")
 rst_pp <- psrwe_powerp(ps_bor, v_outcome = "Y_Bin",
-                        outcome_type = "binary")
+                        outcome_type = "binary",
+                        seed = 1234)
 
 ## ----eval=T, echo=TRUE--------------------------------------------------------
 summary(rst_pp)

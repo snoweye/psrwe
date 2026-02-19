@@ -1,6 +1,6 @@
 ## ----eval=T, echo=FALSE-------------------------------------------------------
 suppressMessages(require(psrwe, quietly = TRUE))
-options(digits = 3)
+org_digits <- options(digits = 3)
 set.seed(1000)
 
 ## ----eval=T, echo=TRUE--------------------------------------------------------
@@ -15,7 +15,8 @@ dta_ps
 ## ----eval=T, echo=TRUE--------------------------------------------------------
 dta_ps_match <- psrwe_match(dta_ps,
                             ratio = 2,
-                            strata_covs = "V1")
+                            strata_covs = "V1",
+                            seed = 123)
 dta_ps_match
 
 ## ----eval=T, echo=TRUE--------------------------------------------------------
@@ -32,4 +33,8 @@ rst_cl
 ## ----eval=T, echo=TRUE--------------------------------------------------------
 oa_cl <- psrwe_outana(rst_cl, method_ci = "wilson", mu = 0.40)
 oa_cl
+
+## ----eval=T, echo=FALSE-------------------------------------------------------
+## Reset to user's options.
+options(org_digits)
 

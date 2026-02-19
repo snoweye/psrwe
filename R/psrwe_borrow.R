@@ -116,6 +116,7 @@ psrwe_borrow <- function(dtaps, total_borrow,
 #'
 #' @method print PSRWE_BOR
 #'
+#' @return A list from \code{x$Borrow}
 #'
 #' @export
 #'

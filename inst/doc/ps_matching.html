@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2025-12-31" />
+<meta name="date" content="2026-01-10" />
 
 <title>Propensity Score-Integrated Matching Method</title>
 
@@ -339,7 +339,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Propensity Score-Integrated Matching
 Method</h1>
-<h4 class="date">2025-12-31</h4>
+<h4 class="date">2026-01-10</h4>
 
 
 
@@ -398,8 +398,9 @@ neighbor algorithm.</p>
 different matching algorithm and package.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>dta_ps_match <span class="ot">&lt;-</span> <span class="fu">psrwe_match</span>(dta_ps,</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                            <span class="at">ratio =</span> <span class="dv">2</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                            <span class="at">strata_covs =</span> <span class="st">&quot;V1&quot;</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>dta_ps_match</span></code></pre></div>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                            <span class="at">strata_covs =</span> <span class="st">&quot;V1&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                            <span class="at">seed =</span> <span class="dv">123</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>dta_ps_match</span></code></pre></div>
 <pre><code>## This is a sing-arm study. A total of 1031 RWD subjects and 
 ## 200 current study subjects are used to estimate propensity 
 ## scores by logistic model. A total of 631 RWD subjects are 
@@ -487,6 +488,8 @@ approach for incorporating real-world evidence in single-arm clinical
 studies. Journal of Biopharmaceutical Statistics, 30(3),
 495-507.</p></li>
 </ol>
+<p><br></p>
+<p><br></p>
 </div>
 
 
