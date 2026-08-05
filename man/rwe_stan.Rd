@@ -6,9 +6,7 @@
 \usage{
 rwe_stan(
   lst_data,
-  stan_mdl = c("powerps", "powerpsbinary", "powerp", "powerps_wattcon",
-    "prioronly_powerps", "prioronly_powerpsbinary", "prioronly_powerp",
-    "prioronly_powerps_wattcon"),
+  stan_mdl = c("powerps", "powerpsbinary", "powerp", "powerps_wattcon"),
   chains = 4,
   iter = 2000,
   warmup = 1000,
@@ -25,12 +23,7 @@ rwe_stan(
     \item{powerpsbinary}{PS-power prior model for binary outcomes}
     \item{powerp}{Power prior model}
     \item{powerps_wattcon}{Power prior model with ATT weights for continuous outcomes}
-    \item{prioronly_powerps}{Only obtain PS-power prior for continuous outcomes}
-    \item{prioronly_powerpsbinary}{Only obtain PS-power prior for binary outcomes}
-    \item{prioronly_powerp}{Only obtain power prior}
-    \item{prioronly_powerps_wattcon}{Only obtain power prior with ATT weights for continuous outcomes}
-}
-where \code{prioronly_*} excludes current study data.}
+}}
 
 \item{chains}{STAN parameter. Number of Markov chains}
 

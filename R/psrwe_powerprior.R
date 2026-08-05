@@ -9,12 +9,7 @@
 #'     \item{powerpsbinary}{PS-power prior model for binary outcomes}
 #'     \item{powerp}{Power prior model}
 #'     \item{powerps_wattcon}{Power prior model with ATT weights for continuous outcomes}
-#'     \item{prioronly_powerps}{Only obtain PS-power prior for continuous outcomes}
-#'     \item{prioronly_powerpsbinary}{Only obtain PS-power prior for binary outcomes}
-#'     \item{prioronly_powerp}{Only obtain power prior}
-#'     \item{prioronly_powerps_wattcon}{Only obtain power prior with ATT weights for continuous outcomes}
 #' }
-#' where \code{prioronly_*} excludes current study data.
 #'
 #' @param chains STAN parameter. Number of Markov chains
 #' @param iter STAN parameter. Number of iterations
@@ -29,11 +24,7 @@
 #'
 rwe_stan <- function(lst_data,
                      stan_mdl = c("powerps", "powerpsbinary", "powerp",
-                                  "powerps_wattcon",
-                                  "prioronly_powerps",
-                                  "prioronly_powerpsbinary",
-                                  "prioronly_powerp",
-                                  "prioronly_powerps_wattcon"),
+                                  "powerps_wattcon"),
                      chains = 4, iter = 2000, warmup = 1000,
                      control = list(adapt_delta = 0.95), ...) {
 
@@ -114,6 +105,7 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
     type       <- match.arg(outcome_type)
     prior_type <- match.arg(prior_type)
     stopifnot(v_outcome %in% colnames(dta_psbor$data))
+    stopifnot((dta_psbor$Total_borrow == 0) && prioronly)
 
     ## save the seed from global if any then set random seed
     # old_seed <- NULL
@@ -128,17 +120,13 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
     ## prepare stan data
-    lst_dta <- get_stan_data(dta_psbor, v_outcome, prior_type)
+    lst_dta <- get_stan_data(dta_psbor, v_outcome, prior_type, prioronly)
 
     ## set stan model
     ## sampling
     stan_mdl <- if_else("continuous" == type,
                         "powerps",
                         "powerpsbinary")
-
-    if (prioronly) {
-        stan_mdl <- paste("prioronly_", stan_mdl, sep = "")
-    }
 
     ## run stan
     ctl_post   <- rwe_stan(lst_data = lst_dta$ctl, stan_mdl = stan_mdl, ...)
@@ -188,7 +176,7 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
                  Method       = "ps_pp",
                  Outcome_type = type,
                  Prior_type   = prior_type,
-                 Prioronly     = prioronly,
+                 Prioronly    = prioronly,
                  is_rct       = is_rct)
 
     class(rst) <- get_rwe_class("ANARST")
@@ -201,7 +189,7 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
 #'
 #' @noRd
 #'
-get_stan_data <- function(dta_psbor, v_outcome, prior_type) {
+get_stan_data <- function(dta_psbor, v_outcome, prior_type, prioronly) {
     f_curd <- function(i, d1, d0 = NULL) {
         cur_d <- c(N1    = length(d1),
                    YBAR1 = mean(d1),
@@ -270,7 +258,8 @@ get_stan_data <- function(dta_psbor, v_outcome, prior_type) {
                           Y1    = ctl_y1,
                           INX1  = ctl_inx1,
                           YBAR1 = as.array(ctl_stan_d[, "YBAR1"]),
-                          YSUM1 = as.array(ctl_stan_d[, "YSUM1"]))
+                          YSUM1 = as.array(ctl_stan_d[, "YSUM1"]),
+                          PRIORONLY = as.numeric(prioronly))
 
     trt_lst_data <- NULL
     if (is_rct) {
@@ -286,7 +275,8 @@ get_stan_data <- function(dta_psbor, v_outcome, prior_type) {
                               Y1    = trt_y1,
                               INX1  = trt_inx1,
                               YBAR1 = as.array(trt_stan_d[, "YBAR1"]),
-                              YSUM1 = as.array(trt_stan_d[, "YSUM1"]))
+                              YSUM1 = as.array(trt_stan_d[, "YSUM1"]),
+                              PRIORONLY = as.numeric(prioronly))
     }
 
 
