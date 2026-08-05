@@ -8,7 +8,13 @@
 #'     \item{powerps}{PS-power prior model for continuous outcomes}
 #'     \item{powerpsbinary}{PS-power prior model for binary outcomes}
 #'     \item{powerp}{Power prior model}
+#'     \item{powerps_wattcon}{Power prior model with ATT weights for continuous outcomes}
+#'     \item{prioronly_powerps}{Only obtain PS-power prior for continuous outcomes}
+#'     \item{prioronly_powerpsbinary}{Only obtain PS-power prior for binary outcomes}
+#'     \item{prioronly_powerp}{Only obtain power prior}
+#'     \item{prioronly_powerps_wattcon}{Only obtain power prior with ATT weights for continuous outcomes}
 #' }
+#' where \code{prioronly_*} excludes current study data.
 #'
 #' @param chains STAN parameter. Number of Markov chains
 #' @param iter STAN parameter. Number of iterations
@@ -23,7 +29,11 @@
 #'
 rwe_stan <- function(lst_data,
                      stan_mdl = c("powerps", "powerpsbinary", "powerp",
-                                  "powerps_wattcon"),
+                                  "powerps_wattcon",
+                                  "prioronly_powerps",
+                                  "prioronly_powerpsbinary",
+                                  "prioronly_powerp",
+                                  "prioronly_powerps_wattcon"),
                      chains = 4, iter = 2000, warmup = 1000,
                      control = list(adapt_delta = 0.95), ...) {
 
@@ -52,6 +62,7 @@ rwe_stan <- function(lst_data,
 #' @param outcome_type Type of outcomes: \code{continuous} or \code{binary}.
 #' @param prior_type Whether treat power parameter as fixed (\code{fixed}) or
 #'     fully Bayesian (\code{random}).
+#' @param prioronly Whether only obtain power prior (exclude current study data).
 #' @param seed Random seed.
 #' @param ... extra parameters for calling function \code{\link{rwe_stan}}.
 #'
@@ -92,6 +103,7 @@ rwe_stan <- function(lst_data,
 psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
                           outcome_type = c("continuous", "binary"),
                           prior_type = c("fixed", "random"),
+                          prioronly = FALSE,
                           ..., seed = NULL) {
 
     ## check
@@ -117,11 +129,17 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
     ## prepare stan data
     lst_dta <- get_stan_data(dta_psbor, v_outcome, prior_type)
 
+    ## set stan model
     ## sampling
     stan_mdl <- if_else("continuous" == type,
                         "powerps",
                         "powerpsbinary")
 
+    if (prioronly) {
+        stan_mdl <- paste("prioronly_", stan_mdl, sep = "")
+    }
+
+    ## run stan
     ctl_post   <- rwe_stan(lst_data = lst_dta$ctl, stan_mdl = stan_mdl, ...)
     ctl_thetas <- extract(ctl_post, "thetas")$thetas
 
@@ -169,6 +187,7 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
                  Method       = "ps_pp",
                  Outcome_type = type,
                  Prior_type   = prior_type,
+                 Prioronly     = prioronly,
                  is_rct       = is_rct)
 
     class(rst) <- get_rwe_class("ANARST")

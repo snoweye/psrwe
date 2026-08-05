@@ -1,7 +1,7 @@
 Package: psrwe
 Title: PS-Integrated Methods for Incorporating Real-World Evidence in
         Clinical Studies
-Version: 3.2-1
+Version: 3.2-2
 Authors@R: c(
     person(given = "Chenguang", family = "Wang",
            role = c("aut")),

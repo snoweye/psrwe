@@ -56,6 +56,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
                               mcmc_method = c("rstan", "analytic", "wattcon"),
                               tau0_method = c("Wang2019", "weighted"),
                               ipw_method = c("Heng.Li", "Xi.Ada.Wang"),
+                              prioronly = FALSE,
                               ..., seed = NULL) {
 
     ## check
@@ -94,6 +95,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
     ## observed
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
+    ## set stan
     if (mcmc_method[1] %in% c("rstan", "analytic")) {
         ## prepare stan data
         lst_dta <- get_stan_data_watt(dta_psbor, v_outcome,
@@ -111,6 +113,10 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
 
         ## sampling
         stan_mdl <- "powerps_wattcon"
+    }
+
+    if (prioronly) {
+        stan_mdl <- paste("prioronly_", stan_mdl, sep = "")
     }
 
     ## run stan or get from analytical solution
@@ -179,6 +185,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
                  Method_weight = "WATT",
                  Outcome_type  = type,
                  Prior_type    = "fixed",
+                 Prioronly     = prioronly,
                  MCMC_method   = mcmc_method[1],
                  tau0_method   = tau0_method[1],
                  is_rct        = is_rct)
