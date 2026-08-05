@@ -14,6 +14,8 @@
 #'     \code{weighted} for continuous outcomes only.
 #' @param ipw_method Method for IPW via either \code{Heng.Li} or
 #'     \code{Xi.Ada.Wang}.
+#' @param prioronly Whether only obtain power prior by excluding the current
+#'     study data).
 #' @param seed Random seed.
 #' @param ... extra parameters for calling function \code{\link{rwe_stan}}.
 #'

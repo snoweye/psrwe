@@ -62,7 +62,8 @@ rwe_stan <- function(lst_data,
 #' @param outcome_type Type of outcomes: \code{continuous} or \code{binary}.
 #' @param prior_type Whether treat power parameter as fixed (\code{fixed}) or
 #'     fully Bayesian (\code{random}).
-#' @param prioronly Whether only obtain power prior (exclude current study data).
+#' @param prioronly Whether only obtain power prior by excluding the current
+#'     study data).
 #' @param seed Random seed.
 #' @param ... extra parameters for calling function \code{\link{rwe_stan}}.
 #'

@@ -42,6 +42,11 @@ LazyData: true
 ByteCompile: true
 SystemRequirements: GNU make
 NeedsCompilation: yes
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Maintainer: Wei-Chen Chen <wccsnow@gmail.com>
+Config/roxygen2/version: 8.1.0
+Packaged: 2026-08-05 16:35:49 UTC; snoweye
+Author: Chenguang Wang [aut],
+  Trustees of Columbia University [cph] (tools/make_cpp.R,
+    R/stanmodels.R),
+  Wei-Chen Chen [aut, cre]

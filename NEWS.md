@@ -1,3 +1,10 @@
+# psrwe 3.2-2
+
+## Main changes
+
+* Add "prior only" option to the rstan/stan code.
+
+
 # psrwe 3.2-1
 
 ## Bug fixes
