@@ -72,7 +72,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
     stopifnot(dta_psbor$nstrata == 1)
     tau0_method <- match.arg(tau0_method)
     ipw_method <- match.arg(ipw_method)
-    stopifnot((dta_psbor$Total_borrow == 0) && prioronly)
+    stopifnot(!((dta_psbor$Total_borrow == 0) && prioronly))
 
     if (mcmc_method[1] == "wattcon") {
        if (type[1] != "continuous") {

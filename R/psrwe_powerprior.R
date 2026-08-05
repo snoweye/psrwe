@@ -105,7 +105,7 @@ psrwe_powerp <- function(dta_psbor, v_outcome = "Y",
     type       <- match.arg(outcome_type)
     prior_type <- match.arg(prior_type)
     stopifnot(v_outcome %in% colnames(dta_psbor$data))
-    stopifnot((dta_psbor$Total_borrow == 0) && prioronly)
+    stopifnot(!((dta_psbor$Total_borrow == 0) && prioronly))
 
     ## save the seed from global if any then set random seed
     # old_seed <- NULL
