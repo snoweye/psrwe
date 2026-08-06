@@ -9,3 +9,5 @@ sec_5_1_ex	psrwe	Example for PSPP, weights of ATT
 sec_5_2_ex	psrwe	Example for PSPP, weights of ATT, RCT
 sec_6_1_ex	psrwe	Example for PSPP, weights of ATT, Xi.Ada.Wang
 sec_6_2_ex	psrwe	Example for PSPP, weights of ATT, RCT, Xi.Ada.Wang
+sec_7_1_ex	psrwe	Example for PSPP, single arm, plot prior only
+sec_7_2_ex	psrwe	Example for PSPP, RCT, plot prior only
