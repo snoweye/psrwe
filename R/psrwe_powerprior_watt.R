@@ -14,6 +14,8 @@
 #'     \code{weighted} for continuous outcomes only.
 #' @param ipw_method Method for IPW via either \code{Heng.Li} or
 #'     \code{Xi.Ada.Wang}.
+#' @param prioronly Whether only obtain power prior by excluding the current
+#'     study data).
 #' @param seed Random seed.
 #' @param ... extra parameters for calling function \code{\link{rwe_stan}}.
 #'
@@ -56,6 +58,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
                               mcmc_method = c("rstan", "analytic", "wattcon"),
                               tau0_method = c("Wang2019", "weighted"),
                               ipw_method = c("Heng.Li", "Xi.Ada.Wang"),
+                              prioronly = FALSE,
                               ..., seed = NULL) {
 
     ## check
@@ -69,6 +72,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
     stopifnot(dta_psbor$nstrata == 1)
     tau0_method <- match.arg(tau0_method)
     ipw_method <- match.arg(ipw_method)
+    stopifnot(!((dta_psbor$Total_borrow == 0) && prioronly))
 
     if (mcmc_method[1] == "wattcon") {
        if (type[1] != "continuous") {
@@ -94,9 +98,10 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
     ## observed
     rst_obs <- get_observed(dta_psbor$data, v_outcome)
 
+    ## set stan
     if (mcmc_method[1] %in% c("rstan", "analytic")) {
         ## prepare stan data
-        lst_dta <- get_stan_data_watt(dta_psbor, v_outcome,
+        lst_dta <- get_stan_data_watt(dta_psbor, v_outcome, prioronly,
                                       tau0_method = tau0_method[1],
                                       ipw_method = ipw_method[1])
 
@@ -106,7 +111,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
                             "powerpsbinary")
     } else {
         ## prepare stan data
-        lst_dta <- get_stan_data_wattcon(dta_psbor, v_outcome,
+        lst_dta <- get_stan_data_wattcon(dta_psbor, v_outcome, prioronly,
                                          ipw_method = ipw_method[1])
 
         ## sampling
@@ -179,6 +184,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
                  Method_weight = "WATT",
                  Outcome_type  = type,
                  Prior_type    = "fixed",
+                 Prioronly     = prioronly,
                  MCMC_method   = mcmc_method[1],
                  tau0_method   = tau0_method[1],
                  is_rct        = is_rct)
@@ -193,7 +199,7 @@ psrwe_powerp_watt <- function(dta_psbor, v_outcome = "Y",
 #'
 #' @noRd
 #'
-get_stan_data_watt <- function(dta_psbor, v_outcome,
+get_stan_data_watt <- function(dta_psbor, v_outcome, prioronly,
                                tau0_method = "Wang2019",
                                ipw_method = "Heng.Li") {
     f_curd <- function(i, d1, d0 = NULL, d0_e = NULL,
@@ -300,7 +306,8 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
                           Y1    = ctl_y1,
                           INX1  = ctl_inx1,
                           YBAR1 = as.array(ctl_stan_d[, "YBAR1"]),
-                          YSUM1 = as.array(ctl_stan_d[, "YSUM1"]))
+                          YSUM1 = as.array(ctl_stan_d[, "YSUM1"]),
+                          PRIORONLY = as.numeric(prioronly))
 
     trt_lst_data <- NULL
     if (is_rct) {
@@ -316,7 +323,8 @@ get_stan_data_watt <- function(dta_psbor, v_outcome,
                               Y1    = trt_y1,
                               INX1  = trt_inx1,
                               YBAR1 = as.array(trt_stan_d[, "YBAR1"]),
-                              YSUM1 = as.array(trt_stan_d[, "YSUM1"]))
+                              YSUM1 = as.array(trt_stan_d[, "YSUM1"]),
+                              PRIORONLY = as.numeric(prioronly))
     }
 
     list(ctl = ctl_lst_data,
@@ -450,7 +458,7 @@ rwe_ana_con <- function(lst_data,
 #'
 #' @noRd
 #'
-get_stan_data_wattcon <- function(dta_psbor, v_outcome,
+get_stan_data_wattcon <- function(dta_psbor, v_outcome, prioronly,
                                   ipw_method = "Heng.Li") {
     is_rct  <- dta_psbor$is_rct
     data    <- dta_psbor$data
@@ -485,7 +493,8 @@ get_stan_data_wattcon <- function(dta_psbor, v_outcome,
                           SD0       = sd(ctl_y0),
                           # A_WATT_DI = A * as.array(ctl_watt_di),
                           N1        = length(ctl_y1),
-                          Y1        = as.array(ctl_y1))
+                          Y1        = as.array(ctl_y1),
+                          PRIORONLY = as.numeric(prioronly))
 
     trt_lst_data <- NULL
     if (is_rct) {
@@ -496,7 +505,8 @@ get_stan_data_wattcon <- function(dta_psbor, v_outcome,
                               SD0       = 0,
                               # A_WATT_DI = as.array(0),
                               N1        = length(trt_y1),
-                              Y1        = as.array(trt_y1))
+                              Y1        = as.array(trt_y1),
+                              PRIORONLY = as.numeric(prioronly))
     }
 
     list(ctl = ctl_lst_data,

@@ -22,6 +22,7 @@ rwe_stan(
     \item{powerps}{PS-power prior model for continuous outcomes}
     \item{powerpsbinary}{PS-power prior model for binary outcomes}
     \item{powerp}{Power prior model}
+    \item{powerps_wattcon}{Power prior model with ATT weights for continuous outcomes}
 }}
 
 \item{chains}{STAN parameter. Number of Markov chains}

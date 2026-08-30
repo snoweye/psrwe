@@ -11,6 +11,7 @@ psrwe_powerp_watt(
   mcmc_method = c("rstan", "analytic", "wattcon"),
   tau0_method = c("Wang2019", "weighted"),
   ipw_method = c("Heng.Li", "Xi.Ada.Wang"),
+  prioronly = FALSE,
   ...,
   seed = NULL
 )
@@ -31,6 +32,9 @@ or \code{wattcon}.}
 
 \item{ipw_method}{Method for IPW via either \code{Heng.Li} or
 \code{Xi.Ada.Wang}.}
+
+\item{prioronly}{Whether only obtain power prior by excluding the current
+study data).}
 
 \item{...}{extra parameters for calling function \code{\link{rwe_stan}}.}
 

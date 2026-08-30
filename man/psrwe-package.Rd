@@ -72,6 +72,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Wei-Chen Chen \email{wccsnow@gmail.com}
   \item Chenguang Wang
 }
 
